@@ -71,28 +71,26 @@
                                            Size="Size.Small"
                                            Disabled="@_loading"
                                            OnClick="@(() => OnRefresh())"
-                                           StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
+                                           StartIcon="@Icons.Material.Filled.Refresh" Color="Color.Info"
                                            Style="margin-right: 4px; margin-bottom:4px">
                                     @ConstantString.Refresh
                                 </MudButton>
                                 @if (_canCreate)
                                 {
-                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Success"
                                                StartIcon="@Icons.Material.Filled.Add"
                                                Size="Size.Small"
                                                Disabled="@_loading"
                                                OnClick="OnCreate"
-                                               Style="margin-right: 4px; margin-bottom:4px"
-                                               IconColor="Color.Surface">
+                                               Style="margin-right: 4px; margin-bottom:4px">
                                         @ConstantString.New
                                     </MudButton>
-                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                    <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Success"
                                                StartIcon="@Icons.Material.Filled.ContentCopy"
                                                Size="Size.Small"
                                                Disabled="@(_selectedItems.Count != 1)"
                                                OnClick="OnClone"
-                                               Style="margin-right: 4px; margin-bottom:4px"
-                                               IconColor="Color.Surface">
+                                               Style="margin-right: 4px; margin-bottom:4px">
                                         @ConstantString.Clone
                                     </MudButton>
                                 }
@@ -103,31 +101,28 @@
                                                Disabled="@(!(_selectedItems.Count > 0))"
                                                Size="Size.Small"
                                                Style="margin-right: 4px; margin-bottom:4px"
-                                               OnClick="OnDeleteChecked"
-                                               IconColor="Color.Surface">
+                                               OnClick="OnDeleteSelectedItems">
                                         @ConstantString.Delete
                                     </MudButton>
                                 }
                                 @if (_canExport)
                                 {
-                                    <MudLoadingButton @bind-Loading="_exporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                    <MudLoadingButton @bind-Loading="_exporting" DisableElevation Variant="Variant.Outlined" Color="Color.Surface"
                                                       Label="@ConstantString.Export"
                                                       Disabled="@_loading"
                                                       StartIcon="@Icons.Custom.FileFormats.FileExcel"
                                                       Size="Size.Small"
                                                       Style="margin-right: 4px; margin-bottom:4px"
-                                                      OnClick="OnExport"
-                                                      IconColor="Color.Surface">
+                                                      OnClick="OnExport">
                                         @ConstantString.Export
                                     </MudLoadingButton>
-                                    <MudLoadingButton @bind-Loading="_pdfExporting" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                                    <MudLoadingButton @bind-Loading="_pdfExporting" DisableElevation Variant="Variant.Outlined" Color="Color.Surface"
                                                       Label="@ConstantString.ExportPDF"
                                                       Disabled="@_loading"
                                                       StartIcon="@Icons.Material.Filled.PictureAsPdf"
                                                       Size="Size.Small"
                                                       Style="margin-right: 4px; margin-bottom:4px"
-                                                      OnClick="OnExportPDF"
-                                                      IconColor="Color.Surface">
+                                                      OnClick="OnExportPDF">
                                         @ConstantString.ExportPDF
                                     </MudLoadingButton>
                                 }
@@ -138,7 +133,7 @@
                                             <MudButton HtmlTag="label"
                                                        Size="Size.Small"
                                                        Variant="Variant.Outlined"
-                                                       Color="Color.Primary"
+                                                       Color="Color.Success"
                                                        Disabled="@_loading"
                                                        StartIcon="@Icons.Material.Filled.Upload"
                                                        for="@context">
@@ -164,8 +159,7 @@
                                                Size="Size.Small"
                                                Disabled="@_loading"
                                                OnClick="OnCreate"
-                                               Style="margin-right: 4px; margin-bottom:4px"
-                                               IconColor="Color.Surface">
+                                               Style="margin-right: 4px; margin-bottom:4px">
                                         @ConstantString.New
                                     </MudButton>
                                 }
@@ -176,8 +170,7 @@
                                                Disabled="@(!(_selectedItems.Count > 0))"
                                                Size="Size.Small"
                                                Style="margin-right: 4px; margin-bottom:4px"
-                                               OnClick="OnDeleteChecked"
-                                               IconColor="Color.Surface">
+                                               OnClick="OnDeleteSelectedItems">
                                         @ConstantString.Delete
                                     </MudButton>
                                 }
@@ -201,7 +194,7 @@
                         {
                             <MudMenu Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                                      Dense="true"
-                                     EndIcon="@Icons.Material.Filled.KeyboardArrowDown" IconColor="Color.Info" AnchorOrigin="Origin.CenterLeft">
+                                     AnchorOrigin="Origin.CenterLeft">
                                 @if (_canEdit)
                                 {
                                     <MudMenuItem OnClick="@(() => OnEdit(context.Item))">@ConstantString.Edit</MudMenuItem>
@@ -216,8 +209,7 @@
                         {
                             <MudTooltip Text="@ConstantString.NoAllowed" Delay="300">
                                 <MudIconButton Variant="Variant.Filled" DisableElevation="true" Disabled="true"
-                                               Icon="@Icons.Material.Filled.DoNotTouch" Size="Size.Small"
-                                               Color="Color.Surface">
+                                               Icon="@Icons.Material.Filled.DoNotTouch" Size="Size.Small">
                                 </MudIconButton>
                             </MudTooltip>
                         }
@@ -351,11 +343,6 @@
         }
     }
 
-    //private  async Task OnFilterChanged(string s)
-    //{
-    //      await _table.ReloadServerData();
-
-    //}
     private void ConditionChanged(string s)
     {
         InvokeAsync(async () => { await _table.ReloadServerData(); });
@@ -436,7 +423,9 @@
             (string.Format(ConstantString.EditTheItem, L["Product"]), parameters, options);
         var state = await dialog.Result;
         if (!state.Canceled)
+        {
             await _table.ReloadServerData();
+        }
     }
 
     private async Task OnDelete(ProductDto dto)
@@ -453,10 +442,11 @@
         if (!state.Canceled)
         {
             await _table.ReloadServerData();
+            _selectedItems = new HashSet<ProductDto>();
         }
     }
 
-    private async Task OnDeleteChecked()
+    private async Task OnDeleteSelectedItems()
     {
         var command = new DeleteProductCommand(_selectedItems.Select(x => x.Id).ToArray());
         var parameters = new DialogParameters
