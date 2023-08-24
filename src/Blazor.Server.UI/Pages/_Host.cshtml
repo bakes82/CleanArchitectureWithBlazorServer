@@ -6,3 +6,8 @@
 }
 
 <component type="typeof(App)" render-mode="Server" />
+<script>
+    window.getClientTimeZone = function() {
+        return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+</script>

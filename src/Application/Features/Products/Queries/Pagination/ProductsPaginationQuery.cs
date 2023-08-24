@@ -19,8 +19,9 @@ public class ProductsWithPaginationQuery : ProductAdvancedFilter, ICacheableRequ
     // the currently logged in user
     public override string ToString()
     {
+        var t = base.ToString();
         return
-            $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice},SortDirection:{SortDirection},OrderBy:{OrderBy},{ PageNumber},{PageSize}";
+            $"CurrentUser:{CurrentUser?.UserId},ListView:{ListView},Search:{Keyword},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice},Timezone:{TimeZone},{base.ToString()}";
     }
 
     public ProductAdvancedSpecification Specification => new ProductAdvancedSpecification(this);

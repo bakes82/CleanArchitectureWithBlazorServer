@@ -10,6 +10,8 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
+@using MMC.AzureAdminBlazorServerUi.Application.Common.Extensions
+@using TimeZoneConverter
 @using Severity = MudBlazor.Severity
 
 @inherits FluxorComponent
@@ -46,6 +48,19 @@
                             <MudEnumSelect Style="min-width:120px" TEnum="ProductListView" ValueChanged="OnChangedListView" Value="Query.ListView" Dense="true" Label="List View">
                             </MudEnumSelect>
                         </div>
+                        <div class="d-flex flex-column flex-grow-2">
+                                                    <TimezonesEnumerableStringsAutocomplete
+                                                        TimezonesFormat="TimezoneFormats.Iana"
+                                                        FullWidth="true"
+                                                        ValueChanged="async s =>{clientTimeZone = s; await _table.ReloadServerData();}"
+                                                        Value="@clientTimeZone"></TimezonesEnumerableStringsAutocomplete>
+                                                    @{ var windowsTime = clientTimeZone == null ? string.Empty : TZConvert.IanaToWindows(clientTimeZone);}
+                                                    <TimezonesEnumerableStringsAutocomplete 
+                                                        TimezonesFormat="TimezoneFormats.Windows"
+                                                        FullWidth="true"
+                                                        ValueChanged="async s => { clientTimeZone = TZConvert.WindowsToIana(s); await _table.ReloadServerData(); }"
+                                                        Value="@windowsTime"></TimezonesEnumerableStringsAutocomplete>
+                                                </div>
                     </div>
                     <div class="flex-grow-1" />
 
@@ -210,6 +225,9 @@
                 </TemplateColumn>
 
                 <PropertyColumn Property="x => x.Brand" Title="@L[_currentDto.GetMemberDescription(x => x.Brand)]">
+                    <CellTemplate>
+                        <MudText Typo="Typo.body2"><MudHighlighter CaseSensitive="false" Class="mud-secondary-text" Style="background-color:transparent;font-weight:bold" HighlightedText="@Query.Keyword" Text="@context.Item.Brand"></MudHighlighter></MudText>
+                    </CellTemplate>
                     <FooterTemplate>
                         @ConstantString.Selected: @_selectedItems.Count
                     </FooterTemplate>
@@ -217,8 +235,8 @@
                 <PropertyColumn Property="x => x.Name" Title="@L[_currentDto.GetMemberDescription(x => x.Name)]">
                     <CellTemplate>
                         <div class="d-flex flex-column">
-                            <MudText Typo="Typo.body2">@context.Item.Name</MudText>
-                            <MudText Typo="Typo.body2">@context.Item.Description</MudText>
+                            <MudText Typo="Typo.body2"><MudHighlighter CaseSensitive="false" Class="mud-secondary-text" Style="background-color:transparent;font-weight:bold" HighlightedText="@Query.Keyword" Text="@context.Item.Name" ></MudHighlighter></MudText>
+                            <MudText Typo="Typo.body2"><MudHighlighter CaseSensitive="false" Class="mud-secondary-text" Style="background-color:transparent;font-weight:bold" HighlightedText="@Query.Keyword" Text="@context.Item.Description"></MudHighlighter></MudText>
                         </div>
                     </CellTemplate>
                 </PropertyColumn>
@@ -228,6 +246,26 @@
                     </FooterTemplate>
                 </PropertyColumn>
                 <PropertyColumn Property="x => x.Unit" Title="@L[_currentDto.GetMemberDescription(x => x.Unit)]" />
+                <PropertyColumn Property="x => x.Created" Title="@L[_currentDto.GetMemberDescription(x => x.Created)]">
+                    <CellTemplate>
+                        @{
+                            var dt = context.Item.Created as DateTime?;
+                            var shortName = clientTimeZone.Contains("/") ? clientTimeZone.Split('/')[1].Replace('_', ' ') : clientTimeZone;
+                        }
+                        <MudItem>
+                            <MudTooltip Text="@TZConvert.GetTimeZoneInfo(clientTimeZone).DisplayName" ShowOnHover="true" Placement="Placement.Top" Arrow="true">
+                                <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface">
+                                    @L[$"{shortName}"] : @dt.Value.ConvertUtcToTimeZone(clientTimeZone).ToString("G")
+                                </MudChip>
+                            </MudTooltip>
+                        </MudItem>
+                        <MudItem>
+                            <MudTooltip Text="@TZConvert.GetTimeZoneInfo("UTC").DisplayName" ShowOnHover="true" Placement="Placement.Bottom" Arrow="true">
+                                <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface">@L["UTC"] : @dt.Value.ToString("G")</MudChip>
+                            </MudTooltip>
+                        </MudItem>
+                    </CellTemplate>
+                </PropertyColumn>
             </Columns>
             <NoRecordsContent>
                 <MudText>@ConstantString.NoRecords</MudText>
@@ -255,6 +293,7 @@
     private bool _exporting;
     private bool _pdfExporting;
     private int _defaultPageSize = 15;
+    private string clientTimeZone;
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
@@ -289,6 +328,7 @@
         _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Delete)).Succeeded;
         _canImport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Import)).Succeeded;
         _canExport = (await AuthService.AuthorizeAsync(state.User, Permissions.Products.Export)).Succeeded;
+        clientTimeZone = await JS.InvokeAsync<string>("getClientTimeZone");
     }
 
     private async Task<GridData<ProductDto>> ServerReload(GridState<ProductDto> state)
@@ -301,6 +341,7 @@
             Query.SortDirection = state.SortDefinitions.FirstOrDefault()?.Descending ?? true ? SortDirection.Descending.ToString() : SortDirection.Ascending.ToString();
             Query.PageNumber = state.Page + 1;
             Query.PageSize = state.PageSize;
+            Query.TimeZone = clientTimeZone;
             var result = await Mediator.Send(Query).ConfigureAwait(false);
             return new GridData<ProductDto> { TotalItems = result.TotalItems, Items = result.Items };
         }
