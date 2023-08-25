@@ -1,5 +1,5 @@
+using CleanArchitecture.Blazor.Application.Common.Extensions;
 using Microsoft.Extensions.Localization;
-using TimeZoneConverter;
 
 namespace Blazor.Server.UI.Components.Common;
 
@@ -15,8 +15,8 @@ public class TimezonesEnumerableStringsAutocomplete : EnumerableStringsAutocompl
     {
         ListOfValues = TimezonesFormat switch
                        {
-                           TimezoneFormats.Iana => TZConvert.KnownIanaTimeZoneNames,
-                           _ => TZConvert.KnownWindowsTimeZoneIds
+                           TimezoneFormats.Iana => TimeZoneInfoExtensions.GetIanaTimeZones(),
+                           _ => TimeZoneInfoExtensions.GetWindowsTimeZones()
                        };
 
         Placeholder           = Localizer["Set Timezone"];

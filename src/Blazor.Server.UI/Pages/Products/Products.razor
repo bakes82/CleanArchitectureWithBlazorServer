@@ -1,7 +1,5 @@
 @page "/pages/products"
-@using CleanArchitecture.Blazor.Application.Features.Fluxor;
 @using CleanArchitecture.Blazor.Application.Features.Products.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Products.Queries
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
 @using CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 @using BlazorDownloadFile
@@ -10,8 +8,6 @@
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 @using CleanArchitecture.Blazor.Application.Features.Products.Commands.Import
 @using CleanArchitecture.Blazor.Application.Features.Products.Specifications
-@using MMC.AzureAdminBlazorServerUi.Application.Common.Extensions
-@using TimeZoneConverter
 @using Severity = MudBlazor.Severity
 
 @inherits FluxorComponent
@@ -52,14 +48,18 @@
                                                     <TimezonesEnumerableStringsAutocomplete
                                                         TimezonesFormat="TimezoneFormats.Iana"
                                                         FullWidth="true"
-                                                        ValueChanged="async s =>{clientTimeZone = s; await _table.ReloadServerData();}"
+                                                        ValueChanged="s => TimezoneValueChanged(s, TimezoneFormats.Iana)"
                                                         Value="@clientTimeZone"></TimezonesEnumerableStringsAutocomplete>
-                                                    @{ var windowsTime = clientTimeZone == null ? string.Empty : TZConvert.IanaToWindows(clientTimeZone);}
-                                                    <TimezonesEnumerableStringsAutocomplete 
+                                                    @{
+                                                        var windowsTime = string.Empty;
+                                                        TimeZoneInfo.TryConvertIanaIdToWindowsId(clientTimeZone, out windowsTime);
+                                                        Console.WriteLine(windowsTime);
+                                                    }
+                                                    @*<TimezonesEnumerableStringsAutocomplete 
                                                         TimezonesFormat="TimezoneFormats.Windows"
                                                         FullWidth="true"
-                                                        ValueChanged="async s => { clientTimeZone = TZConvert.WindowsToIana(s); await _table.ReloadServerData(); }"
-                                                        Value="@windowsTime"></TimezonesEnumerableStringsAutocomplete>
+                                                        ValueChanged="s => TimezoneValueChanged(s, TimezoneFormats.Windows)"
+                                                        Value="@windowsTime"></TimezonesEnumerableStringsAutocomplete>*@
                                                 </div>
                     </div>
                     <div class="flex-grow-1" />
@@ -245,14 +245,14 @@
                             var shortName = clientTimeZone.Contains("/") ? clientTimeZone.Split('/')[1].Replace('_', ' ') : clientTimeZone;
                         }
                         <MudItem>
-                            <MudTooltip Text="@TZConvert.GetTimeZoneInfo(clientTimeZone).DisplayName" ShowOnHover="true" Placement="Placement.Top" Arrow="true">
+                            <MudTooltip Text="@TimeZoneInfo.FindSystemTimeZoneById(clientTimeZone).DisplayName" ShowOnHover="true" Placement="Placement.Top" Arrow="true">
                                 <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface">
                                     @L[$"{shortName}"] : @dt.Value.ConvertUtcToTimeZone(clientTimeZone).ToString("G")
                                 </MudChip>
                             </MudTooltip>
                         </MudItem>
                         <MudItem>
-                            <MudTooltip Text="@TZConvert.GetTimeZoneInfo("UTC").DisplayName" ShowOnHover="true" Placement="Placement.Bottom" Arrow="true">
+                            <MudTooltip Text="@TimeZoneInfo.FindSystemTimeZoneById("UTC").DisplayName" ShowOnHover="true" Placement="Placement.Bottom" Arrow="true">
                                 <MudChip Icon="@Icons.Material.Filled.Watch" IconColor="Color.Secondary" Label="true" Color="Color.Surface">@L["UTC"] : @dt.Value.ToString("G")</MudChip>
                             </MudTooltip>
                         </MudItem>
@@ -286,6 +286,7 @@
     private bool _pdfExporting;
     private int _defaultPageSize = 15;
     private string clientTimeZone;
+    private string windowsTime;
     [Inject]
     private IState<UserProfileState> UserProfileState { get; set; } = null!;
     private UserProfile UserProfile => UserProfileState.Value.UserProfile;
@@ -544,6 +545,42 @@
             }
         }
         _uploading = false;
+    }
+
+    private async Task TimezoneValueChanged(string timezone, TimezoneFormats format = TimezoneFormats.Iana)
+    {
+        switch (format)
+        {
+            case TimezoneFormats.Iana:
+                clientTimeZone = timezone;
+                
+                try
+                {
+                    TimeZoneInfo.TryConvertIanaIdToWindowsId(timezone, out windowsTime);
+                }
+                catch (Exception e)
+                {
+                    TimeZoneInfo.TryConvertIanaIdToWindowsId(TimeZoneInfo.Utc.Id, out windowsTime);
+                }
+                
+                break;
+            case TimezoneFormats.Windows:
+                windowsTime = timezone;
+                
+                try
+                {
+                    TimeZoneInfo.TryConvertWindowsIdToIanaId(timezone, out clientTimeZone);
+                }
+                catch (Exception e)
+                {
+                    clientTimeZone = TimeZoneInfo.Utc.Id;
+                }
+                
+                break;
+            default:
+                break;
+        }
+        await _table.ReloadServerData();
     }
 
 }

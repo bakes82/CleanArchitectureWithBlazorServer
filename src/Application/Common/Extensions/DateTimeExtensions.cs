@@ -1,6 +1,4 @@
-﻿using TimeZoneConverter;
-
-namespace MMC.AzureAdminBlazorServerUi.Application.Common.Extensions;
+﻿namespace CleanArchitecture.Blazor.Application.Common.Extensions;
 
 public static class DateTimeExtensions
 {
@@ -11,7 +9,7 @@ public static class DateTimeExtensions
             throw new ArgumentException("The DateTime must be of DateTimeKind UTC.", nameof(utcDateTime));
         }
         
-        var timeZoneInfo = TZConvert.GetTimeZoneInfo(timezone);
+        var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timezone);
         return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, timeZoneInfo);
     }
 }

@@ -1,6 +1,4 @@
 
-using MMC.AzureAdminBlazorServerUi.Application.Common.Extensions;
-
 namespace CleanArchitecture.Blazor.Application.Features.Products.Specifications;
 #nullable disable warnings
 public class ProductAdvancedSpecification : Specification<Product>
