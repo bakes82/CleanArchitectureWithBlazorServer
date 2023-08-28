@@ -78,7 +78,7 @@ public class AuthController : Controller
             }
 
             IdentityResult assignResult = await _userManager.AddToRoleAsync(user, RoleName.Basic);
-            if (!createResult.Succeeded)
+            if (!assignResult.Succeeded)
             {
                 return Unauthorized();
             }
@@ -90,9 +90,8 @@ public class AuthController : Controller
         {
             return Unauthorized();
         }
-
-        bool isPersistent = true;
-        await _signInManager.SignInAsync(user, isPersistent);
+        
+        await _signInManager.SignInAsync(user, true);
         return Redirect("/");
     }
 

@@ -1,7 +1,7 @@
 @page "/system/logs"
 @using Blazor.Server.UI.Pages.SystemManagement.Components
 @using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs
-@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData
+@using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChartData
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Queries.PaginationQuery
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Specifications
 @using CleanArchitecture.Blazor.Application.Features.Loggers.Commands.Clear
@@ -188,7 +188,7 @@
     {
         if (firstRender)
         {
-            Data = await Mediator.Send(new LogsTimeLineChatDataQuery());
+            Data = await Mediator.Send(new LogsTimeLineChartDataQuery());
             StateHasChanged();
             await _chartComponent!.RenderChart();
         }

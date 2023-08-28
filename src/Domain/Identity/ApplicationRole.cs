@@ -1,6 +1,6 @@
 namespace CleanArchitecture.Blazor.Domain.Identity;
 
-public class ApplicationRole : IdentityRole
+public sealed class ApplicationRole : IdentityRole
 {
     public ApplicationRole()
     {
@@ -14,7 +14,7 @@ public class ApplicationRole : IdentityRole
         UserRoles  = new HashSet<ApplicationUserRole>();
     }
 
-    public         string?                           Description { get; set; }
-    public virtual ICollection<ApplicationRoleClaim> RoleClaims  { get; set; }
-    public virtual ICollection<ApplicationUserRole>  UserRoles   { get; set; }
+    public string?                           Description { get; set; }
+    public ICollection<ApplicationRoleClaim> RoleClaims  { get; set; }
+    public ICollection<ApplicationUserRole>  UserRoles   { get; set; }
 }

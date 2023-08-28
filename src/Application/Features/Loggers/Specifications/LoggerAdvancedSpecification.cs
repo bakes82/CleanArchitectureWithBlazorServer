@@ -2,14 +2,12 @@
 
 namespace CleanArchitecture.Blazor.Application.Features.Loggers.Specifications;
 #nullable disable warnings
-public class LoggerAdvancedSpecification : Specification<Logger>
+public sealed class LoggerAdvancedSpecification : Specification<Logger>
 {
     public LoggerAdvancedSpecification(LoggerAdvancedFilter filter)
     {
         DateTime today = DateTime.Now.ToUniversalTime()
                                  .Date;
-        DateTime start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00", CultureInfo.CurrentCulture);
-        DateTime end   = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59", CultureInfo.CurrentCulture);
         DateTime last30days = Convert.ToDateTime(today.AddDays(-30)
                                                       .ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) +
                                                  " 00:00:00", CultureInfo.CurrentCulture);

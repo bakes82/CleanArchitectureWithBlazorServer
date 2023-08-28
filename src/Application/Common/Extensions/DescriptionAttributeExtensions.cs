@@ -18,10 +18,10 @@ public static class DescriptionAttributeExtensions
 
     public static string GetMemberDescription<T, TProperty>(this T t, Expression<Func<T, TProperty>> property) where T : class
     {
-        if (t is null)
+        /*if (t is null)
         {
             t = Activator.CreateInstance<T>();
-        }
+        }*/
 
         string memberName = ((MemberExpression)property.Body).Member.Name;
         MemberInfo? memberInfo = typeof(T).GetMember(memberName)

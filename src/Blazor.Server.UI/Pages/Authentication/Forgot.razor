@@ -89,14 +89,14 @@
         {
             _sending = true;
             _user = await UserManager.FindByEmailAsync(_emailAddress) ?? throw new NotFoundException($"Application user {_emailAddress} Not Found.");
-            ;
+            
             if (_user is null)
             {
                 Snackbar.Add(L["No user found by email, please contact the administrator"], Severity.Error);
                 return;
             }
             _resetPasswordToken = await UserManager.GeneratePasswordResetTokenAsync(_user);
-            var response = await SendResetPasswordToken(_emailAddress, _user.UserName!, _resetPasswordToken);
+            var response = await SendResetPasswordToken(_emailAddress, _resetPasswordToken);
             if (response.Successful)
             {
                 _step = 2;
@@ -129,7 +129,7 @@
         }
     }
 
-    private Task<SendResponse> SendResetPasswordToken(string toEmail, string userName, string token)
+    private Task<SendResponse> SendResetPasswordToken(string toEmail, string token)
     {
         var subject = L["Verify your recovery email"];
     //var template = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "EmailTemplates" ,"_recoverypassword.txt");

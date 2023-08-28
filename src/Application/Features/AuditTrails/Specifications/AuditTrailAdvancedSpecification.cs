@@ -1,13 +1,11 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Specifications;
 #nullable disable warnings
-public class AuditTrailAdvancedSpecification : Specification<AuditTrail>
+public sealed class AuditTrailAdvancedSpecification : Specification<AuditTrail>
 {
     public AuditTrailAdvancedSpecification(AuditTrailAdvancedFilter filter)
     {
         DateTime today = DateTime.Now.ToUniversalTime()
                                  .Date;
-        DateTime start = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 00:00:00", CultureInfo.CurrentCulture);
-        DateTime end   = Convert.ToDateTime(today.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) + " 23:59:59", CultureInfo.CurrentCulture);
         DateTime last30day = Convert.ToDateTime(today.AddDays(-30)
                                                      .ToString("yyyy-MM-dd", CultureInfo.CurrentCulture) +
                                                 " 00:00:00", CultureInfo.CurrentCulture);

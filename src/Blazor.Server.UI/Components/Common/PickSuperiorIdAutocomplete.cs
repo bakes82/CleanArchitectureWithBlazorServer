@@ -45,7 +45,6 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
                               .Select(x => x.Id)
                               .Take(MaxItems ?? 50)
                               .ToList();
-            ;
         }
 
         return result;

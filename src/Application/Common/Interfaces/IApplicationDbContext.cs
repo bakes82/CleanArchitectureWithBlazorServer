@@ -1,5 +1,4 @@
 using CleanArchitecture.Blazor.Domain.Entities.Logger;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
 

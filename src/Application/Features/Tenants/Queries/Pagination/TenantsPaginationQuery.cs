@@ -36,7 +36,7 @@ public class TenantsWithPaginationQueryHandler : IRequestHandler<TenantsWithPagi
     }
 }
 #nullable disable warnings
-public class TenantsPaginationSpecification : Specification<Tenant>
+public sealed class TenantsPaginationSpecification : Specification<Tenant>
 {
     public TenantsPaginationSpecification(TenantsWithPaginationQuery query)
     {

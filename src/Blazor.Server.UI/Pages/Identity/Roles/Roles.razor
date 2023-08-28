@@ -193,7 +193,6 @@
 
 @code {
     private bool _processing;
-    private string _currentRoleName = string.Empty;
     private int _defaultPageSize = 15;
     private HashSet<ApplicationRoleDto> _selectedItems = new HashSet<ApplicationRoleDto>();
     private readonly ApplicationRoleDto _currentDto = new ApplicationRoleDto();
@@ -365,8 +364,6 @@
     private async Task OnSetPermissions(ApplicationRoleDto item)
     {
         _showPermissionsDrawer = true;
-        _permissions = new List<PermissionModel>();
-        _currentRoleName = item.Name!;
         _permissions = await GetAllPermissions(item);
     }
 
@@ -568,7 +565,4 @@
         _uploading = false;
         return Task.CompletedTask;
     }
-
-
-
 }

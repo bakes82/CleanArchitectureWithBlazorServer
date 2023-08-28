@@ -63,7 +63,7 @@
                 break;
         }
         StackTrace = Exception.StackTrace;
-        Logger.LogError(Exception, "{Message}. request url: {@url} {@UserName}", Message, Navigation.Uri, userName);
+        Logger.LogError(Exception, "{Message}. request url: {@Url} {@UserName}", Message, Navigation.Uri, userName);
     }
 
     private void OnRefresh()

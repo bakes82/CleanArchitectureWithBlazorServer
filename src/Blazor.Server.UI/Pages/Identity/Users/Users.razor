@@ -13,7 +13,6 @@
 @using Severity = MudBlazor.Severity
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
 @using System.Reflection
-@implements IDisposable
 @page "/identity/users"
 @inject IStringLocalizer<Users> L
 @attribute [Authorize(Policy = Permissions.Users.View)]

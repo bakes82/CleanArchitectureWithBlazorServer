@@ -22,8 +22,8 @@ public class CustomModelValidation : ComponentBase
 
         _messageStore = new ValidationMessageStore(CurrentEditContext);
 
-        CurrentEditContext.OnValidationRequested += (s, e) => _messageStore?.Clear();
-        CurrentEditContext.OnFieldChanged        += (s, e) => _messageStore?.Clear(e.FieldIdentifier);
+        CurrentEditContext.OnValidationRequested += (_, _) => _messageStore?.Clear();
+        CurrentEditContext.OnFieldChanged        += (_, e) => _messageStore?.Clear(e.FieldIdentifier);
     }
 
     public void DisplayErrors(IDictionary<string, ICollection<string>> errors)

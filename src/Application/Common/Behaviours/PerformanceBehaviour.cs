@@ -22,8 +22,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 
         TResponse response = await next()
             .ConfigureAwait(false);
-        ;
-
+        
         _timer.Stop();
 
         long elapsedMilliseconds = _timer.ElapsedMilliseconds;

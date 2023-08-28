@@ -1,28 +1,28 @@
 using CleanArchitecture.Blazor.Application.Features.Loggers.Caching;
 using CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 
-namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChatData;
+namespace CleanArchitecture.Blazor.Application.Features.Loggers.Queries.ChartData;
 
-public class LogsTimeLineChatDataQuery : ICacheableRequest<List<LogTimeLineDto>>
+public class LogsTimeLineChartDataQuery : ICacheableRequest<List<LogTimeLineDto>>
 {
     public DateTime                 LastDateTime { get; set; } = DateTime.Now.AddDays(-60);
     public string                   CacheKey     => LogsCacheKey.GetChartDataCacheKey(LastDateTime.ToString());
     public MemoryCacheEntryOptions? Options      => LogsCacheKey.MemoryCacheEntryOptions;
 }
 
-public class LogsChatDataQueryHandler : IRequestHandler<LogsTimeLineChatDataQuery, List<LogTimeLineDto>>
+public class LogsChartDataQueryHandler : IRequestHandler<LogsTimeLineChartDataQuery, List<LogTimeLineDto>>
 
 {
     private readonly IApplicationDbContext                      _context;
-    private readonly IStringLocalizer<LogsChatDataQueryHandler> _localizer;
+    private readonly IStringLocalizer<LogsChartDataQueryHandler> _localizer;
 
-    public LogsChatDataQueryHandler(IApplicationDbContext context, IStringLocalizer<LogsChatDataQueryHandler> localizer)
+    public LogsChartDataQueryHandler(IApplicationDbContext context, IStringLocalizer<LogsChartDataQueryHandler> localizer)
     {
         _context   = context;
         _localizer = localizer;
     }
 
-    public async Task<List<LogTimeLineDto>> Handle(LogsTimeLineChatDataQuery request, CancellationToken cancellationToken)
+    public async Task<List<LogTimeLineDto>> Handle(LogsTimeLineChartDataQuery request, CancellationToken cancellationToken)
     {
         var data = await _context.Loggers.Where(x => x.TimeStamp >= request.LastDateTime)
                                  .GroupBy(x => new { x.TimeStamp.Date })
