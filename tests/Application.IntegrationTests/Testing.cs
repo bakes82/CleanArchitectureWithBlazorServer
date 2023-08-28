@@ -181,12 +181,6 @@ public class Testing
                             .CountAsync();
     }
 
-    public static IPicklistService CreatePicklistService()
-    {
-        IServiceScope scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<IPicklistService>();
-    }
-
     public static ITenantService CreateTenantsService()
     {
         IServiceScope scope = _scopeFactory.CreateScope();

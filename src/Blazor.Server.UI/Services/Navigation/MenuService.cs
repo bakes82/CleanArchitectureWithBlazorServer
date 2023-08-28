@@ -15,18 +15,6 @@ public class MenuService : IMenuService
                                                                                    new MenuSectionItemModel { Title = "Home", Icon = Icons.Material.Filled.Home, Href = "/" },
                                                                                    new MenuSectionItemModel
                                                                                    {
-                                                                                       Title      = "E-Commerce",
-                                                                                       Icon       = Icons.Material.Filled.ShoppingCart,
-                                                                                       PageStatus = PageStatus.Completed,
-                                                                                       IsParent   = true,
-                                                                                       MenuItems = new List<MenuSectionSubItemModel>
-                                                                                                   {
-                                                                                                       new MenuSectionSubItemModel { Title = "Products", Href  = "/pages/products", PageStatus  = PageStatus.Completed },
-                                                                                                       new MenuSectionSubItemModel { Title = "Documents", Href = "/pages/documents", PageStatus = PageStatus.Completed }
-                                                                                                   }
-                                                                                   },
-                                                                                   new MenuSectionItemModel
-                                                                                   {
                                                                                        Title = "Analytics",
                                                                                        Roles = new[]
                                                                                                {
@@ -92,7 +80,6 @@ public class MenuService : IMenuService
                                                                                        Icon     = Icons.Material.Filled.Devices,
                                                                                        MenuItems = new List<MenuSectionSubItemModel>
                                                                                                    {
-                                                                                                       new MenuSectionSubItemModel { Title = "Picklist", Href     = "/system/picklist", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Audit Trails", Href = "/system/audittrails", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Log", Href          = "/system/logs", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Jobs", Href         = "/jobs", PageStatus = PageStatus.Completed, Target = "_blank" }

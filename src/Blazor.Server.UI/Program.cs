@@ -1,4 +1,3 @@
-using Application.Example;
 using Blazor.Server.UI;
 using Blazor.Server.UI.Services.Notifications;
 using CleanArchitecture.Blazor.Application;
@@ -12,8 +11,6 @@ builder.RegisterSerilog();
 builder.AddBlazorUiServices();
 builder.Services.AddInfrastructureServices(builder.Configuration)
        .AddApplicationServices();
-
-builder.Services.AddApplicationServicesExample();
 
 WebApplication app = builder.Build();
 

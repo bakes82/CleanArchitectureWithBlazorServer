@@ -3,7 +3,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Services.MultiTenant;
-using CleanArchitecture.Blazor.Application.Services.Picklist;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application;
@@ -32,13 +32,6 @@ public static class DependencyInjection
                                options.UseReduxDevTools();
                            });
         services.AddLazyCache();
-        services.AddScoped<PicklistService>();
-        services.AddScoped<IPicklistService>(sp =>
-                                             {
-                                                 PicklistService service = sp.GetRequiredService<PicklistService>();
-                                                 service.Initialize();
-                                                 return service;
-                                             });
         services.AddScoped<TenantService>();
         services.AddScoped<ITenantService>(sp =>
                                            {

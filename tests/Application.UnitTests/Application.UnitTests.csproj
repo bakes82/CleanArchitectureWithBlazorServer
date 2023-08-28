@@ -20,9 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Application.Example\Application.Example.csproj" />
         <ProjectReference Include="..\..\src\Application\Application.csproj"/>
         <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\Behaviours\" />
+      <Folder Include="Common\Mappings\" />
     </ItemGroup>
 
 </Project>

@@ -24,12 +24,15 @@
         <PackageReference Include="Toolbelt.Blazor.HotKeys2" Version="1.0.0"/>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Application.Example\Application.Example.csproj" />
         <ProjectReference Include="..\Application\Application.csproj"/>
-        <ProjectReference Include="..\Blazor.Server.UI.Example\Blazor.Server.UI.Example.csproj" />
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
         <ProjectReference Include="..\Migrators\Migrators.MSSQL\Migrators.MSSQL.csproj"/>
         <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj"/>
         <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Documents\Documents.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Documents\_DocumentFormDialog.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Documents\_UploadFilesFormDialog.razor" />
     </ItemGroup>   
 </Project>
