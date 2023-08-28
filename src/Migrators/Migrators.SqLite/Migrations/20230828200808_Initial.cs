@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,44 +67,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "KeyValues",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true),
-                    Text = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_KeyValues", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Loggers",
                 columns: table => new
                 {
@@ -116,7 +78,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     TimeStamp = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Exception = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
-                    ClientIP = table.Column<string>(type: "TEXT", nullable: true),
+                    ClientIp = table.Column<string>(type: "TEXT", nullable: true),
                     ClientAgent = table.Column<string>(type: "TEXT", nullable: true),
                     Properties = table.Column<string>(type: "TEXT", nullable: true),
                     LogEvent = table.Column<string>(type: "TEXT", nullable: true)
@@ -127,38 +89,12 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Brand = table.Column<string>(type: "TEXT", nullable: true),
-                    Unit = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Pictures = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Tenants",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
+                    Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -296,46 +232,8 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         name: "FK_AuditTrails_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Documents",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Content = table.Column<string>(type: "TEXT", nullable: true),
-                    IsPublic = table.Column<bool>(type: "INTEGER", nullable: false),
-                    URL = table.Column<string>(type: "TEXT", nullable: true),
-                    DocumentType = table.Column<string>(type: "TEXT", nullable: false),
-                    TenantId = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Documents", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Documents_AspNetUsers_CreatedBy",
-                        column: x => x.CreatedBy,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Documents_AspNetUsers_LastModifiedBy",
-                        column: x => x.LastModifiedBy,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Documents_Tenants_TenantId",
-                        column: x => x.TenantId,
-                        principalTable: "Tenants",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -384,21 +282,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 name: "IX_AuditTrails_UserId",
                 table: "AuditTrails",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Documents_CreatedBy",
-                table: "Documents",
-                column: "CreatedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Documents_LastModifiedBy",
-                table: "Documents",
-                column: "LastModifiedBy");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Documents_TenantId",
-                table: "Documents",
-                column: "TenantId");
         }
 
         /// <inheritdoc />
@@ -423,28 +306,16 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                 name: "AuditTrails");
 
             migrationBuilder.DropTable(
-                name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "Documents");
-
-            migrationBuilder.DropTable(
-                name: "KeyValues");
-
-            migrationBuilder.DropTable(
                 name: "Loggers");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Tenants");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Tenants");
         }
     }
 }

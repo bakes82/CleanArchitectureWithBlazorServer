@@ -19,8 +19,9 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Audit.AuditTrail", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AffectedColumns")
                         .HasColumnType("TEXT");
@@ -55,127 +56,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.ToTable("AuditTrails");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("TenantId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("URL")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Documents");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.KeyValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KeyValues");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Logger.Logger", b =>
                 {
                     b.Property<int>("Id")
@@ -185,7 +65,7 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.Property<string>("ClientAgent")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ClientIP")
+                    b.Property<string>("ClientIp")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Exception")
@@ -216,47 +96,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Loggers");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Brand")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Pictures")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Unit")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Tenant", b =>
@@ -519,29 +358,6 @@ namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
-                {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Editor")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId");
-
-                    b.Navigation("Editor");
-
-                    b.Navigation("Owner");
-
-                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRoleClaim", b =>

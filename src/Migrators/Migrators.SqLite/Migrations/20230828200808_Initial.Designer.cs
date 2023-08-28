@@ -5,59 +5,52 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
+namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230425144203_Init")]
-    partial class Init
+    [Migration("20230828200808_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Audit.AuditTrail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AffectedColumns")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("AuditType")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DateTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NewValues")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("OldValues")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PrimaryKey")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TableName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -66,242 +59,58 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                     b.ToTable("AuditTrails");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Content")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("TenantId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("text");
-
-                    b.Property<string>("URL")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex("LastModifiedBy");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Documents");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.KeyValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("KeyValues");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Logger.Logger", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ClientAgent")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
-                    b.Property<string>("ClientIP")
-                        .HasColumnType("text");
+                    b.Property<string>("ClientIp")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Exception")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Level")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LogEvent")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Message")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MessageTemplate")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Properties")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Loggers");
                 });
 
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Brand")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Pictures")
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Unit")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Products");
-                });
-
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Tenant", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -311,22 +120,22 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -341,25 +150,23 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Group")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -371,84 +178,84 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsLive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ProfilePictureDataUrl")
                         .HasColumnType("text");
 
                     b.Property<string>("Provider")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("SuperiorId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TenantId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("TenantName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -468,22 +275,20 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -495,17 +300,17 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -517,10 +322,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserRole", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -532,16 +337,16 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationUserToken", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -552,30 +357,10 @@ namespace CleanArchitecture.Blazor.Migrators.PostgreSQL.Migrations
                 {
                     b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Entities.Document", b =>
-                {
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("CreatedBy");
-
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Identity.ApplicationUser", "Editor")
-                        .WithMany()
-                        .HasForeignKey("LastModifiedBy");
-
-                    b.HasOne("CleanArchitecture.Blazor.Domain.Entities.Tenant", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId");
-
-                    b.Navigation("Editor");
-
-                    b.Navigation("Owner");
-
-                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("CleanArchitecture.Blazor.Domain.Identity.ApplicationRoleClaim", b =>
