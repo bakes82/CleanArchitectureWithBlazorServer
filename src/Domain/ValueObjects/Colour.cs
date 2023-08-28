@@ -1,14 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 namespace CleanArchitecture.Blazor.Domain.ValueObjects;
 #nullable disable
 public class Colour : ValueObject
 {
-    static Colour()
-    {
-    }
-
     private Colour()
     {
     }
@@ -16,18 +9,6 @@ public class Colour : ValueObject
     private Colour(string code)
     {
         Code = code;
-    }
-
-    public static Colour From(string code)
-    {
-        var colour = new Colour { Code = code };
-
-        if (!SupportedColours.Contains(colour))
-        {
-            throw new UnsupportedColourException(code);
-        }
-
-        return colour;
     }
 
     public static Colour White => new Colour("#FFFFFF");
@@ -48,21 +29,6 @@ public class Colour : ValueObject
 
     public string Code { get; private set; }
 
-    public static implicit operator string(Colour colour)
-    {
-        return colour.ToString();
-    }
-
-    public static explicit operator Colour(string code)
-    {
-        return From(code);
-    }
-
-    public override string ToString()
-    {
-        return Code;
-    }
-
     protected static IEnumerable<Colour> SupportedColours
     {
         get
@@ -76,6 +42,33 @@ public class Colour : ValueObject
             yield return Purple;
             yield return Grey;
         }
+    }
+
+    public static Colour From(string code)
+    {
+        Colour colour = new Colour { Code = code };
+
+        if (!SupportedColours.Contains(colour))
+        {
+            throw new UnsupportedColourException(code);
+        }
+
+        return colour;
+    }
+
+    public static implicit operator string(Colour colour)
+    {
+        return colour.ToString();
+    }
+
+    public static explicit operator Colour(string code)
+    {
+        return From(code);
+    }
+
+    public override string ToString()
+    {
+        return Code;
     }
 
     protected override IEnumerable<object> GetEqualityComponents()

@@ -15,8 +15,7 @@ public static class Reducers
     }
 
     [ReducerMethod]
-    public static UserProfileState ReduceFetchUserDtoResultAction(UserProfileState state,
-        FetchUserDtoResultAction action)
+    public static UserProfileState ReduceFetchUserDtoResultAction(UserProfileState state, FetchUserDtoResultAction action)
     {
         return new UserProfileState(false, action.UserProfile);
     }

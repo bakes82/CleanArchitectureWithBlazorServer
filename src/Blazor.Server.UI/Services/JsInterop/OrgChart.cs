@@ -3,8 +3,7 @@ using Microsoft.JSInterop;
 
 namespace Blazor.Server.UI.Services.JsInterop;
 
-
-public partial class OrgChart
+public class OrgChart
 {
     private readonly IJSRuntime _jsRuntime;
 
@@ -12,10 +11,9 @@ public partial class OrgChart
     {
         _jsRuntime = jsRuntime;
     }
+
     public ValueTask Create(List<OrgItem> data)
     {
-        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.CreateOrgChart, data);
+        return _jsRuntime.InvokeVoidAsync(JsInteropConstants.CreateOrgChart, data);
     }
-
-
 }

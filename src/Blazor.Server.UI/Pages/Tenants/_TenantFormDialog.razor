@@ -1,4 +1,5 @@
 @using CleanArchitecture.Blazor.Application.Features.Tenants.Commands.AddEdit
+@using Severity = MudBlazor.Severity
 @inherits MudComponentBase
 @inject IStringLocalizer<Tenants> L
 <MudDialog>
@@ -6,7 +7,7 @@
         <MudForm Model="Model" @ref="_form" Validation="@(_modelValidator.ValidateValue)">
             <MudGrid>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Id)]" @bind-Value="Model.Id"
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Id)]" @bind-Value="Model.Id"
                                   For="@(() => Model.Id)"
                                   ReadOnly="true"
                                   Required="true"
@@ -14,14 +15,14 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Name)]" @bind-Value="Model.Name"
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Name)]" @bind-Value="Model.Name"
                                   For="@(() => Model.Name)"
                                   Required="true"
                                   RequiredError="@L["Tenant name is required!"]">
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                    <MudTextField Label="@L[Model.GetMemberDescription(x=>x.Description)]" @bind-Value="Model.Description"
+                    <MudTextField Label="@L[Model.GetMemberDescription(x => x.Description)]" @bind-Value="Model.Description"
                                   For="@(() => Model.Description)">
                     </MudTextField>
                 </MudItem>
@@ -31,39 +32,45 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudLoadingButton Loading="@_saving" Color="MudBlazor.Color.Primary" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
+        <MudLoadingButton Loading="@_saving" Color="Color.Primary" OnClick="Submit">@ConstantString.Save</MudLoadingButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    MudForm? _form = default!;
-    bool _saving = false;
+    MudForm? _form;
+    bool _saving;
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
 
     readonly AddEditTenantCommandValidator _modelValidator = new AddEditTenantCommandValidator();
-    [EditorRequired][Parameter] public AddEditTenantCommand Model { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public AddEditTenantCommand Model { get; set; } = default!;
+
     [Inject]
-    private IMediator _mediator { get; set; } = default!;
+    private IMediator Mediator { get; set; } = default!;
+
     async Task Submit()
     {
         try
         {
             _saving = true;
-            await _form!.Validate().ConfigureAwait(false);
+            await _form!.Validate()
+                        .ConfigureAwait(false);
 
-            if (!_form!.IsValid)
-                return;
-            var result = await _mediator.Send(Model);
+            if (!_form!.IsValid) return;
+            var result = await Mediator.Send(Model);
 
             if (result.Succeeded)
             {
                 MudDialog.Close(DialogResult.Ok(true));
-                Snackbar.Add(ConstantString.SaveSuccess, MudBlazor.Severity.Info);
+                Snackbar.Add(ConstantString.SaveSuccess, Severity.Info);
             }
             else
             {
-                Snackbar.Add(result.ErrorMessage, MudBlazor.Severity.Error);
+                Snackbar.Add(result.ErrorMessage, Severity.Error);
             }
         }
         finally
@@ -71,5 +78,10 @@
             _saving = false;
         }
     }
-    void Cancel() => MudDialog.Cancel();
+
+    void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
 }

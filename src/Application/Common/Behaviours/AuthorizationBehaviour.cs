@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Common.Security;
 
@@ -9,40 +6,39 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly IIdentityService _identityService;
+    private readonly IIdentityService    _identityService;
 
-    public AuthorizationBehaviour(
-        ICurrentUserService currentUserService,
-        IIdentityService identityService)
+    public AuthorizationBehaviour(ICurrentUserService currentUserService, IIdentityService identityService)
     {
         _currentUserService = currentUserService;
-        _identityService = identityService;
+        _identityService    = identityService;
     }
 
-    public async Task<TResponse> Handle(TRequest request,  RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var authorizeAttributes = request.GetType().GetCustomAttributes<RequestAuthorizeAttribute>();
+        IEnumerable<RequestAuthorizeAttribute> authorizeAttributes = request.GetType()
+                                                                            .GetCustomAttributes<RequestAuthorizeAttribute>();
         if (authorizeAttributes.Any())
         {
             // Must be authenticated user
-            var userId = _currentUserService.UserId;
+            string? userId = _currentUserService.UserId;
             if (string.IsNullOrEmpty(userId))
             {
                 throw new UnauthorizedAccessException();
             }
 
             // DefaultRole-based authorization
-            var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
+            IEnumerable<RequestAuthorizeAttribute> authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
 
             if (authorizeAttributesWithRoles.Any())
             {
-                var authorized = false;
+                bool authorized = false;
 
-                foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+                foreach (string[] roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
                 {
-                    foreach (var role in roles)
+                    foreach (string role in roles)
                     {
-                        var isInRole = await _identityService.IsInRoleAsync(userId, role.Trim());
+                        bool isInRole = await _identityService.IsInRoleAsync(userId, role.Trim());
                         if (isInRole)
                         {
                             authorized = true;
@@ -59,12 +55,12 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
             }
 
             // Policy-based authorization
-            var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+            IEnumerable<RequestAuthorizeAttribute> authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
             if (authorizeAttributesWithPolicies.Any())
             {
-                foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
+                foreach (string? policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
                 {
-                    var authorized = await _identityService.AuthorizeAsync(userId, policy);
+                    bool authorized = await _identityService.AuthorizeAsync(userId, policy);
 
                     if (!authorized)
                     {
@@ -75,6 +71,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
         }
 
         // User is authorized / authorization not required
-        return await next().ConfigureAwait(false);
+        return await next()
+            .ConfigureAwait(false);
     }
 }

@@ -2,10 +2,9 @@ namespace Blazor.Server.UI.Components.Common;
 
 public partial class ErrorHandler
 {
+    public List<Exception> ReceivedExceptions = new List<Exception>();
 
-    public List<Exception> ReceivedExceptions = new();
-
-    protected override  Task OnErrorAsync(Exception exception)
+    protected override Task OnErrorAsync(Exception exception)
     {
         ReceivedExceptions.Add(exception);
         switch (exception)
@@ -14,6 +13,7 @@ public partial class ErrorHandler
                 Snackbar.Add("Authentication Failed", Severity.Error);
                 break;
         }
+
         return Task.CompletedTask;
     }
 

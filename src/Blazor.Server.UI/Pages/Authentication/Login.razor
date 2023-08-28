@@ -1,6 +1,6 @@
 @page "/pages/authentication/login"
 @inject AccessTokenProvider TokenProvider
-@inject IJSRuntime JS
+@inject IJSRuntime Js
 @inherits OwningComponentBase
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @using Microsoft.AspNetCore.DataProtection
@@ -94,12 +94,12 @@
     [Inject]
     protected NavigationManager NavigationManager { get; set; } = null!;
 
-    private LoginFormModel _model = new()
-    {
-        UserName = "administrator",
-        Password = "Password123!",
-        RememberMe = true
-    };
+    private LoginFormModel _model = new LoginFormModel
+                                    {
+                                        UserName = "administrator",
+                                        Password = "Password123!",
+                                        RememberMe = true
+                                    };
 
     MudForm? _form;
     bool _success;
@@ -107,7 +107,6 @@
 
     [Inject]
     private LoginFormModelFluentValidator LoginValidator { get; set; } = default!;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -163,9 +162,22 @@
 
     private async Task OnResetPassword(ApplicationUser item)
     {
-        var model = new ResetPasswordFormModel { Id = item.Id, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.ProfilePictureDataUrl };
-        var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
+        var model = new ResetPasswordFormModel
+                    {
+                        Id = item.Id,
+                        DisplayName = item.DisplayName,
+                        UserName = item.UserName,
+                        ProfilePictureDataUrl = item.ProfilePictureDataUrl
+                    };
+        var parameters = new DialogParameters
+                         {
+                             ["model"] = model
+                         };
+        var options = new DialogOptions
+                      {
+                          CloseOnEscapeKey = true,
+                          MaxWidth = MaxWidth.ExtraSmall
+                      };
         var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set new password"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
@@ -189,7 +201,7 @@
 
     private async Task SignInExternal(string provider)
     {
-        await JS.InvokeVoidAsync("externalLogin", provider, DotNetObjectReference.Create(this));
+        await Js.InvokeVoidAsync("externalLogin", provider, DotNetObjectReference.Create(this));
     }
 
     [JSInvokable]
@@ -208,18 +220,18 @@
         {
             var admin = await UserManager.FindByNameAsync(UserName.Administrator) ?? throw new NotFoundException("Administrator's account Not Found.");
             user = new ApplicationUser
-            {
-                EmailConfirmed = true,
-                IsActive = true,
-                IsLive = true,
-                UserName = userName,
-                Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
-                Provider = provider,
-                DisplayName = name,
-                SuperiorId = admin.Id,
-                TenantId = admin.TenantId,
-                TenantName = admin.TenantName
-            };
+                   {
+                       EmailConfirmed = true,
+                       IsActive = true,
+                       IsLive = true,
+                       UserName = userName,
+                       Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
+                       Provider = provider,
+                       DisplayName = name,
+                       SuperiorId = admin.Id,
+                       TenantId = admin.TenantId,
+                       TenantName = admin.TenantName
+                   };
             var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)
             {

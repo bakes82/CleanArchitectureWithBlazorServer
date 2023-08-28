@@ -1,6 +1,5 @@
 @using System.Globalization
 @using Microsoft.Extensions.Options
-@using Blazor.Server.UI.Services
 @using Blazor.Server.UI.Services.Layout
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Dense="true">
@@ -14,7 +13,7 @@
                 }
                 else
                 {
-                    <MudMenuItem OnClick="(()=> ChangeLanguageAsync(language.Name))">@language.DisplayName</MudMenuItem>
+                    <MudMenuItem OnClick="() => ChangeLanguageAsync(language.Name)">@language.DisplayName</MudMenuItem>
                 }
             }
         }
@@ -23,10 +22,16 @@
 
 @code {
     public string? CurrentLanguage { get; set; } = "en-US";
-    public List<CultureInfo>? SupportedLanguages { get; set; } = new();
-    [Inject] private NavigationManager Navigation { get; set; } = null!;
-    [Inject] private IOptions<RequestLocalizationOptions> LocalizationOptions { get; set; } = null!;
-    [Inject] private LayoutService LayoutService { get; set; } = null!;
+    public List<CultureInfo>? SupportedLanguages { get; set; } = new List<CultureInfo>();
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = null!;
+
+    [Inject]
+    private IOptions<RequestLocalizationOptions> LocalizationOptions { get; set; } = null!;
+
+    [Inject]
+    private LayoutService LayoutService { get; set; } = null!;
 
     protected override Task OnInitializedAsync()
     {
@@ -35,17 +40,15 @@
         return Task.CompletedTask;
     }
 
-
     private async Task ChangeLanguageAsync(string languageCode)
     {
         CurrentLanguage = languageCode;
-        Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
+        Navigation.NavigateTo(Navigation.BaseUri + "?culture=" + languageCode, true);
 
-        if (new CultureInfo(languageCode).TextInfo.IsRightToLeft)
-            await LayoutService.SetRightToLeft();
-        else
-            await LayoutService.SetLeftToRight();
-        
+        if (new CultureInfo(languageCode).TextInfo.IsRightToLeft) await LayoutService.SetRightToLeft();
+        else await LayoutService.SetLeftToRight();
+
         await Task.CompletedTask;
     }
+
 }

@@ -7,25 +7,24 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
 {
     private List<ApplicationUserDto>? _userList;
 
-    [Parameter] 
-    public string? TenantId { get; set; } 
+    [Parameter]
+    public string? TenantId { get; set; }
 
-    [Parameter] 
+    [Parameter]
     public string OwnerName { get; set; } = string.Empty;
 
-    [Inject] 
+    [Inject]
     private IIdentityService IdentityService { get; set; } = default!;
-
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        SearchFuncWithCancel = SearchKeyValues;
-        ToStringFunc = ToString;
-        Clearable = true;
-        Dense = true;
+        SearchFuncWithCancel  = SearchKeyValues;
+        ToStringFunc          = ToString;
+        Clearable             = true;
+        Dense                 = true;
         ResetValueOnEmptyText = true;
         ShowProgressIndicator = true;
-        MaxItems = 50;
+        MaxItems              = 50;
         return base.SetParametersAsync(parameters);
     }
 
@@ -36,15 +35,16 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
         List<string> result = new List<string>();
         if (string.IsNullOrEmpty(value) && _userList is not null)
         {
-            result = _userList.Select(x => x.Id).Take(MaxItems ?? 50).ToList();
+            result = _userList.Select(x => x.Id)
+                              .Take(MaxItems ?? 50)
+                              .ToList();
         }
         else if (_userList is not null)
         {
-            result = _userList
-                .Where(x => !x.UserName.Equals(OwnerName, StringComparison.OrdinalIgnoreCase) &&
-                            (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) ||
-                             x.Email.Contains(value, StringComparison.OrdinalIgnoreCase))).Select(x => x.Id)
-                .Take(MaxItems ?? 50).ToList();
+            result = _userList.Where(x => !x.UserName.Equals(OwnerName, StringComparison.OrdinalIgnoreCase) && (x.UserName.Contains(value, StringComparison.OrdinalIgnoreCase) || x.Email.Contains(value, StringComparison.OrdinalIgnoreCase)))
+                              .Select(x => x.Id)
+                              .Take(MaxItems ?? 50)
+                              .ToList();
             ;
         }
 
@@ -53,8 +53,7 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
 
     private string ToString(string str)
     {
-        if (_userList is not null && !string.IsNullOrEmpty(str) &&
-            _userList.Any(x => x.Id.Equals(str, StringComparison.OrdinalIgnoreCase)))
+        if (_userList is not null && !string.IsNullOrEmpty(str) && _userList.Any(x => x.Id.Equals(str, StringComparison.OrdinalIgnoreCase)))
         {
             ApplicationUserDto userDto = _userList.First(x => x.Id == str);
             return userDto.UserName;

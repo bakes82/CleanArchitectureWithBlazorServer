@@ -1,7 +1,6 @@
-@using Blazor.Server.UI.Services
 @using Blazor.Server.UI.Services.UserPreferences
 @inject IStringLocalizer<SharedResource> L
-<MudDrawer Anchor="LayoutService.IsRTL?Anchor.Left:Anchor.Right"
+<MudDrawer Anchor="@(LayoutService.IsRtl ? Anchor.Left : Anchor.Right)"
            @bind-Open="ThemingDrawerOpen"
            Elevation="1"
            Variant="@DrawerVariant.Temporary"
@@ -10,13 +9,13 @@
         <MudText Typo="Typo.body1">
             <b>@L["Themes"]</b>
         </MudText>
-        <MudSpacer />
+        <MudSpacer/>
         <MudIconButton Color="Color.Default"
                        Icon="@Icons.Material.Filled.Close"
                        OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
-                       Size="Size.Small" />
+                       Size="Size.Small"/>
     </MudDrawerHeader>
-    <MudDivider />
+    <MudDivider/>
     <div class="ma-6">
         <MudText Typo="Typo.body2">
             <b>@L["Mode"]</b>
@@ -24,42 +23,42 @@
         <MudGrid Class="my-3"
                  Spacing="3">
             <MudItem xs="4">
-                 <MudTooltip Duration="1000" Text="@L["Switch to system"]">
-                <MudButton Class="mode-button"
-                           FullWidth="true"
-                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
-                           Style="background: white;">
-                    <ChildContent>
-                        <MudIcon Color="Color.Primary"
-                                 Icon="@Icons.Material.Filled.AutoMode" />
-                    </ChildContent>
-                </MudButton>
+                <MudTooltip Duration="1000" Text="@L["Switch to system"]">
+                    <MudButton Class="mode-button"
+                               FullWidth="true"
+                               OnClick="@(() => ToggleDarkLightMode(DarkLightMode.System))"
+                               Style="background: white;">
+                        <ChildContent>
+                            <MudIcon Color="Color.Primary"
+                                     Icon="@Icons.Material.Filled.AutoMode"/>
+                        </ChildContent>
+                    </MudButton>
                 </MudTooltip>
             </MudItem>
             <MudItem xs="4">
                 <MudTooltip Duration="1000" Text="@L["Switch to Light Theme"]">
-                <MudButton Class="mode-button"
-                           FullWidth="true"
-                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
-                           Style="background: white;">
-                    <ChildContent>
-                        <MudIcon Color="Color.Primary"
-                                 Icon="@Icons.Material.Filled.WbSunny" />
-                    </ChildContent>
-                </MudButton>
+                    <MudButton Class="mode-button"
+                               FullWidth="true"
+                               OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Light))"
+                               Style="background: white;">
+                        <ChildContent>
+                            <MudIcon Color="Color.Primary"
+                                     Icon="@Icons.Material.Filled.WbSunny"/>
+                        </ChildContent>
+                    </MudButton>
                 </MudTooltip>
             </MudItem>
             <MudItem xs="4">
                 <MudTooltip Duration="1000" Text="@L["Switch to Dark Theme"]">
-                <MudButton Class="mode-button"
-                           FullWidth="true"
-                           OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
-                           Style="background: #333333;">
-                    <ChildContent>
-                        <MudIcon Icon="@Icons.Material.Filled.DarkMode"
-                                 Style="color: #c9c9c9" />
-                    </ChildContent>
-                </MudButton>
+                    <MudButton Class="mode-button"
+                               FullWidth="true"
+                               OnClick="@(() => ToggleDarkLightMode(DarkLightMode.Dark))"
+                               Style="background: #333333;">
+                        <ChildContent>
+                            <MudIcon Icon="@Icons.Material.Filled.DarkMode"
+                                     Style="color: #c9c9c9"/>
+                        </ChildContent>
+                    </MudButton>
                 </MudTooltip>
             </MudItem>
         </MudGrid>
@@ -73,11 +72,11 @@
             {
                 <MudItem xs="4">
                     <MudButton Class="@(color == UserPreferences.PrimaryColor ? "color-button color-button-selected" : "color-button")"
-                           FullWidth="true"
-                           OnClick="@(() => UpdateThemePrimaryColor(color))">
+                               FullWidth="true"
+                               OnClick="@(() => UpdateThemePrimaryColor(color))">
                         <ChildContent>
                             <div class="@(color == UserPreferences.PrimaryColor ? "oval oval-selected" : "oval")"
-                             style="@($"background: {color};")">
+                                 style="@($"background: {color};")">
                             </div>
                         </ChildContent>
                     </MudButton>
@@ -92,7 +91,7 @@
 
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.BorderRadius" Min="0" Max="@MaxValue" Immediate="false" Step="1" Color="Color.Primary"
-                           @oninput="@((e) => ChangedSelection(e))">
+                           @oninput="@(e => ChangedSelection(e))">
                     @UserPreferences.BorderRadius.ToString()
                 </MudSlider>
             </MudItem>
@@ -106,7 +105,7 @@
 
             <MudItem xs="12">
                 <MudSlider Value="@UserPreferences.DefaultFontSize" Min="0.75" Max="1.125" Immediate="false" Step="0.0625" Color="Color.Primary"
-                           @oninput="@((e) => ChangedFontSize(e))">
+                           @oninput="@(e => ChangedFontSize(e))">
                     @($"{UserPreferences.DefaultFontSize.ToString()} rem")
                 </MudSlider>
             </MudItem>
@@ -118,7 +117,7 @@
 <MudOverlay DarkBackground="false"
             OnClick="@(() => ThemingDrawerOpenChanged.InvokeAsync(false))"
             Visible="ThemingDrawerOpen"
-            VisibleChanged="ThemingDrawerOpenChanged" />
+            VisibleChanged="ThemingDrawerOpenChanged"/>
 
 
 <style>

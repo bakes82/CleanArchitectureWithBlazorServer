@@ -1,7 +1,8 @@
+@using Severity = MudBlazor.Severity
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Logout" Class="mr-3 mb-n1" />
+            <MudIcon Icon="@Icons.Material.Filled.Logout" Class="mr-3 mb-n1"/>
             @ConstantString.LogoutConfirmationTitle
         </MudText>
     </TitleContent>
@@ -15,19 +16,29 @@
 </MudDialog>
 
 @code {
-    [Parameter] public string? ContentText { get; set; }
 
-    [Parameter] public Color Color { get; set; }
+    [Parameter]
+    public string? ContentText { get; set; }
 
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; } = default!;
-    [Inject] private NavigationManager Navigation { get; set; }= default!;
+    [Parameter]
+    public Color Color { get; set; }
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager Navigation { get; set; } = default!;
 
     Task Submit()
     {
         MudDialog.Close(DialogResult.Ok(true));
-        Snackbar.Add(@ConstantString.LogoutSuccess, MudBlazor.Severity.Info);
+        Snackbar.Add(ConstantString.LogoutSuccess, Severity.Info);
         return Task.CompletedTask;
     }
 
-    void Cancel() =>  MudDialog.Cancel();
+    void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
 }

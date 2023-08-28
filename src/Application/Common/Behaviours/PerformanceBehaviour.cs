@@ -1,23 +1,18 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Diagnostics;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
 
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    private readonly Stopwatch _timer;
-    private readonly ILogger<TRequest> _logger;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ILogger<TRequest>   _logger;
+    private readonly Stopwatch           _timer;
 
-    public PerformanceBehaviour(
-        ILogger<TRequest> logger,
-        ICurrentUserService currentUserService )
+    public PerformanceBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
     {
         _timer = new Stopwatch();
 
-        _logger = logger;
+        _logger             = logger;
         _currentUserService = currentUserService;
     }
 
@@ -25,20 +20,22 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
     {
         _timer.Start();
 
-        var response = await next().ConfigureAwait(false); ;
+        TResponse response = await next()
+            .ConfigureAwait(false);
+        ;
 
         _timer.Stop();
 
-        var elapsedMilliseconds = _timer.ElapsedMilliseconds;
+        long elapsedMilliseconds = _timer.ElapsedMilliseconds;
 
         if (elapsedMilliseconds > 500)
         {
-            var requestName = typeof(TRequest).Name;
+            string requestName = typeof(TRequest).Name;
 
-            var userName = _currentUserService.UserName;
-            _logger.LogWarning("{Name} long running request ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ",
-                requestName, elapsedMilliseconds, request, userName);
+            string? userName = _currentUserService.UserName;
+            _logger.LogWarning("{Name} long running request ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ", requestName, elapsedMilliseconds, request, userName);
         }
+
         return response;
     }
 }

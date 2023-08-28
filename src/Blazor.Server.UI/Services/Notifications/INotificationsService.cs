@@ -2,7 +2,6 @@ namespace Blazor.Server.UI.Services.Notifications;
 
 public interface INotificationService
 {
-
     Task<bool> AreNewNotificationsAvailable();
     Task MarkNotificationsAsRead();
     Task MarkNotificationsAsRead(string id);

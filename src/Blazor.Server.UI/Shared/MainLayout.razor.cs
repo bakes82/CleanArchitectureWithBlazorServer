@@ -7,20 +7,20 @@ namespace Blazor.Server.UI.Shared;
 
 public partial class MainLayout : LayoutComponentBase, IDisposable
 {
-    private bool _commandPaletteOpen;
-    private HotKeysContext? _hotKeysContext;
-    private bool _sideMenuDrawerOpen = true;
-    private UserPreferences _userPreferences = new();
+    private bool             _commandPaletteOpen;
+    private bool             _defaultDarkMode;
+    private HotKeysContext?  _hotKeysContext;
+    private MudThemeProvider _mudThemeProvider   = null!;
+    private bool             _sideMenuDrawerOpen = true;
+    private bool             _themingDrawerOpen;
+    private UserPreferences  _userPreferences = new UserPreferences();
+
     [Inject]
     private LayoutService LayoutService { get; set; } = null!;
-    private MudThemeProvider _mudThemeProvider=null!;
-    private bool _themingDrawerOpen;
-    private bool _defaultDarkMode;
-    [Inject] private HotKeys HotKeys { get; set; } = default!;
-    
-    
-    
-   
+
+    [Inject]
+    private HotKeys HotKeys { get; set; } = default!;
+
     public void Dispose()
     {
         LayoutService.MajorUpdateOccured -= LayoutServiceOnMajorUpdateOccured;
@@ -38,57 +38,57 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
             StateHasChanged();
         }
     }
+
     private async Task ApplyUserPreferences()
     {
-        _defaultDarkMode =await _mudThemeProvider.GetSystemPreference();
+        _defaultDarkMode = await _mudThemeProvider.GetSystemPreference();
         _userPreferences = await LayoutService.ApplyUserPreferences(_defaultDarkMode);
     }
+
     protected override void OnInitialized()
     {
         LayoutService.MajorUpdateOccured += LayoutServiceOnMajorUpdateOccured;
         LayoutService.SetBaseTheme(Theme.Theme.ApplicationTheme());
-        _hotKeysContext = HotKeys.CreateContext().Add(ModKey.Ctrl, Key.K, async () => await OpenCommandPalette(), "Open command palette.");
-       
-
+        _hotKeysContext = HotKeys.CreateContext()
+                                 .Add(ModKey.Ctrl, Key.K, async () => await OpenCommandPalette(), "Open command palette.");
     }
+
     private async Task OnSystemPreferenceChanged(bool newValue)
     {
         await LayoutService.OnSystemPreferenceChanged(newValue);
     }
-    private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e) => StateHasChanged();
 
-
+    private void LayoutServiceOnMajorUpdateOccured(object? sender, EventArgs e)
+    {
+        StateHasChanged();
+    }
 
     protected void SideMenuDrawerOpenChangedHandler(bool state)
     {
         _sideMenuDrawerOpen = state;
     }
+
     protected void ThemingDrawerOpenChangedHandler(bool state)
     {
         _themingDrawerOpen = state;
     }
+
     protected void ToggleSideMenuDrawer()
     {
         _sideMenuDrawerOpen = !_sideMenuDrawerOpen;
     }
+
     private async Task OpenCommandPalette()
     {
         if (!_commandPaletteOpen)
         {
-            var options = new DialogOptions
-            {
-                NoHeader = true,
-                MaxWidth = MaxWidth.Medium,
-                FullWidth = true
-            };
+            DialogOptions options = new DialogOptions { NoHeader = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
-            var commandPalette = DialogService.Show<CommandPalette>("", options);
+            IDialogReference? commandPalette = DialogService.Show<CommandPalette>("", options);
             _commandPaletteOpen = true;
 
             await commandPalette.Result;
             _commandPaletteOpen = false;
         }
     }
-
-
 }

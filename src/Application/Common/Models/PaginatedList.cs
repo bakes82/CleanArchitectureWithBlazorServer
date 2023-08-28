@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 namespace CleanArchitecture.Blazor.Application.Common.Models;
 
 public abstract class PaginatedList
@@ -22,27 +19,30 @@ public abstract class PaginatedList
 
     public static async Task<PaginatedList<T>> CreateAsync<T>(IQueryable<T> source, int pageNumber, int pageSize)
     {
-        var count = await source.CountAsync();
-        var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        int count = await source.CountAsync();
+        List<T> items = await source.Skip((pageNumber - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .ToListAsync();
 
         return new PaginatedList<T>(items, count, pageNumber, pageSize);
     }
 }
+
 public class PaginatedList<T> : PaginatedList
 {
+    public PaginatedList(IReadOnlyCollection<T> items, int count, int pageNumber, int pageSize) : base(count, pageNumber, pageSize)
+    {
+        Items = items;
+    }
+
     public IReadOnlyCollection<T> Items { get; }
-
-    public PaginatedList(
-        IReadOnlyCollection<T> items,
-        int count,
-        int pageNumber,
-        int pageSize) : base(count, pageNumber, pageSize) => Items = items;
-
 
     public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
     {
-        var count = await source.CountAsync();
-        var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+        int count = await source.CountAsync();
+        List<T> items = await source.Skip((pageIndex - 1) * pageSize)
+                                    .Take(pageSize)
+                                    .ToListAsync();
 
         return new PaginatedList<T>(items, count, pageIndex, pageSize);
     }

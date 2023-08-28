@@ -4,12 +4,12 @@
                 Placement="Placement.Left"
                 Text="Themes">
         <MudIcon Icon="@Icons.Material.Filled.Brush"
-                 Style="color: #05192d" />
+                 Style="color: #05192d"/>
     </MudTooltip>
 </div>
 
 
-@if (LayoutService.IsRTL)
+@if (LayoutService.IsRtl)
 {
     <style>
         .theme-button {
@@ -25,11 +25,9 @@
             border-bottom-right-radius: 24px !important;
         }
     </style>
-    
 }
 else
 {
- 
     <style>
         .theme-button {
             position: fixed;
@@ -45,6 +43,4 @@ else
             
         }
     </style>
-
 }
-

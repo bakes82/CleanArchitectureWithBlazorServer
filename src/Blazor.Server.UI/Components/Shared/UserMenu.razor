@@ -1,6 +1,6 @@
-@using CleanArchitecture.Blazor.Infrastructure.Services.JWT;
 @inject IStringLocalizer<SharedResource> L
 @inject AccessTokenProvider TokenProvider
+@using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @inherits FluxorComponent
 <MudTooltip Arrow="true" Text="@L["User Profile"]">
     <MudMenu AnchorOrigin="Origin.BottomRight"
@@ -14,7 +14,7 @@
                 <MudStack Row="true" Class="ma-4">
                     @if (IsLoading)
                     {
-                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+                        <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true"/>
                     }
                     else
                     {
@@ -35,18 +35,18 @@
                     </MudStack>
                 </MudStack>
 
-                <MudDivider Class="my-2" />
+                <MudDivider Class="my-2"/>
                 <MudMenuItem Link="/user/profile">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Person" />
+                                 Icon="@Icons.Material.Filled.Person"/>
                         <MudText>@L["Profile"]</MudText>
                     </div>
                 </MudMenuItem>
                 <MudMenuItem OnClick="OnSettingClick">
                     <div class="d-flex">
                         <MudIcon Class="mx-2"
-                                 Icon="@Icons.Material.Filled.Settings" />
+                                 Icon="@Icons.Material.Filled.Settings"/>
                         <MudText>@L["Settings"]</MudText>
                     </div>
                 </MudMenuItem>

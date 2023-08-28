@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Application.Features.Identity.Dto;
 
 namespace CleanArchitecture.Blazor.Application.Features.Fluxor;
 
@@ -14,8 +15,10 @@ public class Effects
     [EffectMethod]
     public async Task HandleFetchDataAction(FetchUserDtoAction action, IDispatcher dispatcher)
     {
-        var result = await _identityService.GetApplicationUserDto(action.UserId);
+        ApplicationUserDto? result = await _identityService.GetApplicationUserDto(action.UserId);
         if (result is not null)
+        {
             dispatcher.Dispatch(new FetchUserDtoResultAction(result));
+        }
     }
 }

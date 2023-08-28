@@ -10,24 +10,22 @@ public class HubClient : IAsyncDisposable
     public delegate Task MessageReceivedEventHandler(object sender, MessageReceivedEventArgs e);
 
     private readonly HubConnection _hubConnection;
-    private bool _started;
+    private          bool          _started;
 
     public HubClient(NavigationManager navigationManager, AccessTokenProvider authProvider)
     {
-        var token = authProvider.AccessToken;
-        var hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(hubUrl, options =>
-            {
-                options.AccessTokenProvider = () => Task.FromResult(token);
-                options.Transports = HttpTransportType.WebSockets;
-            })
-            .Build();
+        string? token  = authProvider.AccessToken;
+        string  hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
+        _hubConnection = new HubConnectionBuilder().WithUrl(hubUrl, options =>
+                                                                    {
+                                                                        options.AccessTokenProvider = () => Task.FromResult(token);
+                                                                        options.Transports          = HttpTransportType.WebSockets;
+                                                                    })
+                                                   .Build();
         _hubConnection.ServerTimeout = TimeSpan.FromSeconds(30);
         _hubConnection.On<string>(SignalR.OnConnect, userId => { Login?.Invoke(this, userId); });
         _hubConnection.On<string>(SignalR.OnDisconnect, userId => { Logout?.Invoke(this, userId); });
-        _hubConnection.On<string>(SignalR.SendNotification,
-            message => { NotificationReceived?.Invoke(this, message); });
+        _hubConnection.On<string>(SignalR.SendNotification, message => { NotificationReceived?.Invoke(this, message); });
         _hubConnection.On<string, string>(SignalR.SendMessage, HandleReceiveMessage);
         _hubConnection.On<string, string, string>(SignalR.SendPrivateMessage, HandleReceivePrivateMessage);
         _hubConnection.On<string>(SignalR.JobCompleted, message => { JobCompleted?.Invoke(this, message); });
@@ -48,12 +46,14 @@ public class HubClient : IAsyncDisposable
 
     public async Task StartAsync(CancellationToken cancellation = default)
     {
-        if (_started) return;
+        if (_started)
+        {
+            return;
+        }
 
         _started = true;
         await _hubConnection.StartAsync(cancellation);
     }
-
 
     private void HandleReceiveMessage(string from, string message)
     {
@@ -77,22 +77,22 @@ public class HubClient : IAsyncDisposable
         await _hubConnection.SendAsync(SignalR.SendNotification, message);
     }
 
-    public event EventHandler<string>? Login;
-    public event EventHandler<string>? JobStarted;
-    public event EventHandler<string>? JobCompleted;
-    public event EventHandler<string>? Logout;
-    public event EventHandler<string>? NotificationReceived;
+    public event EventHandler<string>?        Login;
+    public event EventHandler<string>?        JobStarted;
+    public event EventHandler<string>?        JobCompleted;
+    public event EventHandler<string>?        Logout;
+    public event EventHandler<string>?        NotificationReceived;
     public event MessageReceivedEventHandler? MessageReceived;
 
     public class MessageReceivedEventArgs : EventArgs
     {
         public MessageReceivedEventArgs(string userId, string message)
         {
-            UserId = userId;
+            UserId  = userId;
             Message = message;
         }
 
-        public string UserId { get; set; }
+        public string UserId  { get; set; }
         public string Message { get; set; }
     }
 }

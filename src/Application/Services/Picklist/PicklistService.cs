@@ -5,49 +5,43 @@ namespace CleanArchitecture.Blazor.Application.Services.Picklist;
 
 public class PicklistService : IPicklistService
 {
-    private readonly IAppCache _cache;
+    private readonly IAppCache             _cache;
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
+    private readonly IMapper               _mapper;
 
-    public PicklistService(
-        IAppCache cache,
-        IApplicationDbContext context, IMapper mapper)
+    public PicklistService(IAppCache cache, IApplicationDbContext context, IMapper mapper)
     {
-        _cache = cache;
+        _cache   = cache;
         _context = context;
-        _mapper = mapper;
+        _mapper  = mapper;
     }
 
-    public event Action? OnChange;
-    public List<KeyValueDto> DataSource { get; private set; } = new();
+    public event Action?     OnChange;
+    public List<KeyValueDto> DataSource { get; private set; } = new List<KeyValueDto>();
 
     public async Task InitializeAsync()
     {
-        DataSource = await _cache.GetOrAddAsync(KeyValueCacheKey.PicklistCacheKey,
-            () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-                .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(),
-            KeyValueCacheKey.MemoryCacheEntryOptions);
+        DataSource = await _cache.GetOrAddAsync(KeyValueCacheKey.PicklistCacheKey, () => _context.KeyValues.OrderBy(x => x.Name)
+                                                                                                 .ThenBy(x => x.Value)
+                                                                                                 .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                                                                                                 .ToListAsync(), KeyValueCacheKey.MemoryCacheEntryOptions);
     }
 
     public void Initialize()
     {
-        DataSource = _cache.GetOrAdd(KeyValueCacheKey.PicklistCacheKey,
-            () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-                .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-                .ToList(),
-            KeyValueCacheKey.MemoryCacheEntryOptions);
+        DataSource = _cache.GetOrAdd(KeyValueCacheKey.PicklistCacheKey, () => _context.KeyValues.OrderBy(x => x.Name)
+                                                                                      .ThenBy(x => x.Value)
+                                                                                      .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                                                                                      .ToList(), KeyValueCacheKey.MemoryCacheEntryOptions);
     }
 
     public async Task Refresh()
     {
         _cache.Remove(KeyValueCacheKey.PicklistCacheKey);
-        DataSource = await _cache.GetOrAddAsync(KeyValueCacheKey.PicklistCacheKey,
-            () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-                .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(),
-            KeyValueCacheKey.MemoryCacheEntryOptions
-        );
+        DataSource = await _cache.GetOrAddAsync(KeyValueCacheKey.PicklistCacheKey, () => _context.KeyValues.OrderBy(x => x.Name)
+                                                                                                 .ThenBy(x => x.Value)
+                                                                                                 .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                                                                                                 .ToListAsync(), KeyValueCacheKey.MemoryCacheEntryOptions);
         OnChange?.Invoke();
     }
 }

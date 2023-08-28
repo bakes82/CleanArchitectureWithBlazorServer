@@ -2,7 +2,7 @@
 
 namespace Blazor.Server.UI.Services.JsInterop;
 
-public partial class OpenSeadragon
+public class OpenSeadragon
 {
     private readonly IJSRuntime _jsRuntime;
 
@@ -10,11 +10,10 @@ public partial class OpenSeadragon
     {
         _jsRuntime = jsRuntime;
     }
+
     public ValueTask Open(string url)
     {
-        var target = "openseadragon";
-        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.ShowOpenSeadragon, target, url);
+        string target = "openseadragon";
+        return _jsRuntime.InvokeVoidAsync(JsInteropConstants.ShowOpenSeadragon, target, url);
     }
-
-
 }

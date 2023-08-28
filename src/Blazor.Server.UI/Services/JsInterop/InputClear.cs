@@ -2,8 +2,7 @@
 
 namespace Blazor.Server.UI.Services.JsInterop;
 
-
-public partial class InputClear
+public class InputClear
 {
     private readonly IJSRuntime _jsRuntime;
 
@@ -11,10 +10,9 @@ public partial class InputClear
     {
         _jsRuntime = jsRuntime;
     }
+
     public ValueTask Clear(string targetId)
     {
-        return _jsRuntime.InvokeVoidAsync(JSInteropConstants.ClearInput, targetId);
+        return _jsRuntime.InvokeVoidAsync(JsInteropConstants.ClearInput, targetId);
     }
-
-
 }

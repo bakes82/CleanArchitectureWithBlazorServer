@@ -10,6 +10,7 @@ public class NugetResponse
     [JsonPropertyName("data")]
     public List<NugetPackage> Data { get; set; }
 }
+
 public class NugetPackage
 {
     [JsonPropertyName("@type")]

@@ -1,11 +1,13 @@
 using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.MultiTenant;
+
 public sealed class TenantProvider : ITenantProvider
 {
     private readonly IDictionary<Guid, Action> _callbacks = new Dictionary<Guid, Action>();
-    public string? TenantId { get; set; }
-    public string? TenantName { get; set; }
+    public           string?                   TenantId   { get; set; }
+    public           string?                   TenantName { get; set; }
+
     public void Unregister(Guid id)
     {
         if (_callbacks.ContainsKey(id))
@@ -13,13 +15,15 @@ public sealed class TenantProvider : ITenantProvider
             _callbacks.Remove(id);
         }
     }
+
     public void Clear()
     {
         _callbacks.Clear();
     }
+
     public void Update()
     {
-        foreach (var callback in _callbacks.Values)
+        foreach (Action callback in _callbacks.Values)
         {
             callback();
         }
@@ -27,7 +31,7 @@ public sealed class TenantProvider : ITenantProvider
 
     public Guid Register(Action callback)
     {
-        var id = Guid.NewGuid();
+        Guid id = Guid.NewGuid();
         _callbacks.Add(id, callback);
         return id;
     }

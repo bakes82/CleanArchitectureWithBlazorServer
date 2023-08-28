@@ -4,21 +4,25 @@ namespace Blazor.Server.UI.Components.Shared;
 
 public partial class NotificationMenu : MudComponentBase
 {
+    private IDictionary<NotificationMessage, bool>? _messages = null;
 
     private bool _newNotificationsAvailable = false;
-    private IDictionary<NotificationMessage, bool>? _messages = null;
-    [Inject] public INotificationService NotificationService { get; set; } = null!;
+
+    [Inject]
+    public INotificationService NotificationService { get; set; } = null!;
+
     private async Task MarkNotificationAsRead()
     {
         await NotificationService.MarkNotificationsAsRead();
         _newNotificationsAvailable = false;
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender == true)
+        if (firstRender)
         {
             _newNotificationsAvailable = await NotificationService.AreNewNotificationsAvailable();
-            _messages = await NotificationService.GetNotifications();
+            _messages                  = await NotificationService.GetNotifications();
             StateHasChanged();
         }
 

@@ -24,33 +24,29 @@ namespace CleanArchitecture.Blazor.Application.IntegrationTests;
 [SetUpFixture]
 public class Testing
 {
-    private static IConfigurationRoot _configuration;
+    private static IConfigurationRoot   _configuration;
     private static IServiceScopeFactory _scopeFactory;
-    private static Respawner _checkpoint;
-    private static string _currentUserId;
-    private static string _currentTenantId;
+    private static Respawner            _checkpoint;
+    private static string               _currentUserId;
+    private static string               _currentTenantId;
 
     [OneTimeSetUp]
     public async Task RunBeforeAnyTests()
     {
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
-            .AddEnvironmentVariables();
+        IConfigurationBuilder builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                                  .AddJsonFile("appsettings.json", true, true)
+                                                                  .AddEnvironmentVariables();
 
         _configuration = builder.Build();
 
         //var startup = new Startup(_configuration);
 
-        var services = new ServiceCollection();
+        ServiceCollection services = new ServiceCollection();
 
-
-        services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
-            w.EnvironmentName == "Development" &&
-            w.ApplicationName == "Blazor.Server.UI"));
+        services.AddSingleton(Mock.Of<IWebHostEnvironment>(w => w.EnvironmentName == "Development" && w.ApplicationName == "Blazor.Server.UI"));
 
         services.AddInfrastructureServices(_configuration)
-            .AddApplicationServices();
+                .AddApplicationServices();
 
         //services.AddLogging();
 
@@ -58,70 +54,76 @@ public class Testing
 
         // Replace service registration for ICurrentUserService
         // Remove existing registration
-        var currentUserServiceDescriptor = services.FirstOrDefault(d =>
-            d.ServiceType == typeof(ICurrentUserService));
+        ServiceDescriptor currentUserServiceDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(ICurrentUserService));
 
         services.Remove(currentUserServiceDescriptor);
 
         // Register testing version
-        services.AddScoped(provider =>
-            Mock.Of<ICurrentUserService>(s =>  s.UserId == _currentUserId));
-        services.AddScoped(provider =>
-            Mock.Of<ITenantProvider>(s => s.TenantId == _currentTenantId));
+        services.AddScoped(provider => Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
+        services.AddScoped(provider => Mock.Of<ITenantProvider>(s => s.TenantId   == _currentTenantId));
 
-        _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
+        _scopeFactory = services.BuildServiceProvider()
+                                .GetService<IServiceScopeFactory>();
 
-        _checkpoint =await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
-        {
-            TablesToIgnore = new Table[] { "__EFMigrationsHistory" }
-        });
+        _checkpoint = await Respawner.CreateAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"), new RespawnerOptions
+                                                                                                                        {
+                                                                                                                            TablesToIgnore = new Table[]
+                                                                                                                                             {
+                                                                                                                                                 "__EFMigrationsHistory"
+                                                                                                                                             }
+                                                                                                                        });
 
         EnsureDatabase();
     }
 
     private static void EnsureDatabase()
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        ApplicationDbContext context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
         context.Database.Migrate();
     }
 
     public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
-        var mediator = scope.ServiceProvider.GetService<IMediator>();
+        IMediator mediator = scope.ServiceProvider.GetService<IMediator>();
 
         return await mediator.Send(request);
     }
 
     public static async Task<string> RunAsDefaultUserAsync()
     {
-        return await RunAsUserAsync("Demo", "Password123!", new string[] { });
+        return await RunAsUserAsync("Demo", "Password123!", new string[]
+                                                            {
+                                                            });
     }
 
     public static async Task<string> RunAsAdministratorAsync()
     {
-        return await RunAsUserAsync("administrator", "Password123!", new[] { "Admin" });
+        return await RunAsUserAsync("administrator", "Password123!", new[]
+                                                                     {
+                                                                         "Admin"
+                                                                     });
     }
 
     public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
-        var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+        UserManager<ApplicationUser> userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
 
-        var user = new ApplicationUser { UserName = userName, Email = userName };
+        ApplicationUser user = new ApplicationUser { UserName = userName, Email = userName };
 
-        var result = await userManager.CreateAsync(user, password);
+        IdentityResult result = await userManager.CreateAsync(user, password);
 
         if (roles.Any())
         {
-            var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
+            RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
 
-            foreach (var role in roles)
+            foreach (string role in roles)
             {
                 await roleManager.CreateAsync(new IdentityRole(role));
             }
@@ -136,7 +138,8 @@ public class Testing
             return _currentUserId;
         }
 
-        var errors = string.Join(Environment.NewLine, result.ToApplicationResult().Errors);
+        string errors = string.Join(Environment.NewLine, result.ToApplicationResult()
+                                                               .Errors);
 
         throw new Exception($"Unable to create {userName}.{Environment.NewLine}{errors}");
     }
@@ -144,26 +147,24 @@ public class Testing
     public static async Task ResetState()
     {
         await _checkpoint.ResetAsync(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
-        _currentUserId = null;
+        _currentUserId   = null;
         _currentTenantId = null;
     }
 
-    public static async Task<TEntity> FindAsync<TEntity>(params object[] keyValues)
-        where TEntity : class
+    public static async Task<TEntity> FindAsync<TEntity>(params object[] keyValues) where TEntity : class
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        ApplicationDbContext context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
         return await context.FindAsync<TEntity>(keyValues);
     }
 
-    public static async Task AddAsync<TEntity>(TEntity entity)
-        where TEntity : class
+    public static async Task AddAsync<TEntity>(TEntity entity) where TEntity : class
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        ApplicationDbContext context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
         context.Add(entity);
 
@@ -172,21 +173,23 @@ public class Testing
 
     public static async Task<int> CountAsync<TEntity>() where TEntity : class
     {
-        using var scope = _scopeFactory.CreateScope();
+        using IServiceScope scope = _scopeFactory.CreateScope();
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        ApplicationDbContext context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-        return await context.Set<TEntity>().CountAsync();
+        return await context.Set<TEntity>()
+                            .CountAsync();
     }
 
     public static IPicklistService CreatePicklistService()
     {
-        var scope = _scopeFactory.CreateScope();
+        IServiceScope scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<IPicklistService>();
     }
+
     public static ITenantService CreateTenantsService()
     {
-        var scope = _scopeFactory.CreateScope();
+        IServiceScope scope = _scopeFactory.CreateScope();
         return scope.ServiceProvider.GetRequiredService<ITenantService>();
     }
 

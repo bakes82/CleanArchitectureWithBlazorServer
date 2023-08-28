@@ -2,6 +2,7 @@
 using NUnit.Framework;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Constants;
+
 public class ConstantStringTests
 {
     [Test]
@@ -39,6 +40,5 @@ public class ConstantStringTests
         Assert.AreEqual("Microsoft", ConstantString.Microsoft);
         Assert.AreEqual("Facebook", ConstantString.Facebook);
         Assert.AreEqual("Google", ConstantString.Google);
-
     }
 }

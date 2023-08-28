@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -22,13 +19,16 @@ public interface ISignalRHub
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class SignalRHub : Hub<ISignalRHub>
 {
-    private static readonly ConcurrentDictionary<string, string> OnlineUsers = new();
+    private static readonly ConcurrentDictionary<string, string> OnlineUsers = new ConcurrentDictionary<string, string>();
 
     public override async Task OnConnectedAsync()
     {
-        var id = Context.ConnectionId;
-        var username = Context.User?.Identity?.Name ?? string.Empty;
-        if (!OnlineUsers.ContainsKey(id)) OnlineUsers.TryAdd(id, username);
+        string id       = Context.ConnectionId;
+        string username = Context.User?.Identity?.Name ?? string.Empty;
+        if (!OnlineUsers.ContainsKey(id))
+        {
+            OnlineUsers.TryAdd(id, username);
+        }
 
         await Clients.All.Connect(username);
         await base.OnConnectedAsync();
@@ -36,23 +36,27 @@ public class SignalRHub : Hub<ISignalRHub>
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var id = Context.ConnectionId;
+        string id = Context.ConnectionId;
         //try to remove key from dictionary
-        if (OnlineUsers.TryRemove(id, out var username)) await Clients.All.Disconnect(username);
+        if (OnlineUsers.TryRemove(id, out string? username))
+        {
+            await Clients.All.Disconnect(username);
+        }
 
         await base.OnConnectedAsync();
     }
 
     public async Task SendMessage(string message)
     {
-        var username = Context.User?.Identity?.Name ?? string.Empty;
+        string username = Context.User?.Identity?.Name ?? string.Empty;
         await Clients.All.SendMessage(username, message);
     }
 
     public async Task SendPrivateMessage(string to, string message)
     {
-        var username = Context.User?.Identity?.Name ?? string.Empty;
-        await Clients.User(to).SendPrivateMessage(username, to, message);
+        string username = Context.User?.Identity?.Name ?? string.Empty;
+        await Clients.User(to)
+                     .SendPrivateMessage(username, to, message);
     }
 
     public async Task SendNotification(string message)

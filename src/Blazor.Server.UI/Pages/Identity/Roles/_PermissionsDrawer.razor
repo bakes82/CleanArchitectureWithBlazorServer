@@ -19,7 +19,10 @@
     </MudStack>
     @if (Permissions.Any())
     {
-        @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => x.Group).Distinct().ToList())
+        @foreach (var group in Permissions.Where(x => x.Group!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase) || x.Description!.Contains(Keyword, StringComparison.InvariantCultureIgnoreCase))
+                                          .Select(x => x.Group)
+                                          .Distinct()
+                                          .ToList())
         {
             <MudCard class="ma-4">
                 <MudCardHeader>
@@ -29,7 +32,8 @@
                                 @group
                             </MudText>
                             <MudText Typo="Typo.body2">
-                                @(Permissions.FirstOrDefault(x => x.Group == group)?.Description)
+                                @(Permissions.FirstOrDefault(x => x.Group == group)
+                                             ?.Description)
                             </MudText>
                         </MudStack>
                     </CardHeaderContent>
@@ -70,7 +74,7 @@
 
     [EditorRequired]
     [Parameter]
-    public List<PermissionModel> Permissions { get; set; } = new()!;
+    public List<PermissionModel> Permissions { get; set; } = new List<PermissionModel>()!;
 
     [EditorRequired]
     [Parameter]

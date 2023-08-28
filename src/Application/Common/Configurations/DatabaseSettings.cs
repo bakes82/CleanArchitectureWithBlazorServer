@@ -5,18 +5,18 @@ namespace CleanArchitecture.Blazor.Application.Common.Configurations;
 /// <summary>
 ///     Configuration wrapper for the database section
 /// </summary>
-public class DatabaseSettings: IValidatableObject
+public class DatabaseSettings : IValidatableObject
 {
     /// <summary>
     ///     Database key constraint
     /// </summary>
     public const string Key = nameof(DatabaseSettings);
-    
+
     /// <summary>
     ///     Represents the database provider, which to connect to
     /// </summary>
-    public string DBProvider { get; set; } = string.Empty;
-    
+    public string DbProvider { get; set; } = string.Empty;
+
     /// <summary>
     ///     The connection string being used to connect with the given database provider
     /// </summary>
@@ -29,18 +29,20 @@ public class DatabaseSettings: IValidatableObject
     /// <returns>The result of the validation</returns>
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
-        if (string.IsNullOrEmpty(DBProvider))
+        if (string.IsNullOrEmpty(DbProvider))
         {
-            yield return new ValidationResult(
-                $"{nameof(DatabaseSettings)}.{nameof(DBProvider)} is not configured",
-                new[] { nameof(DBProvider) });
+            yield return new ValidationResult($"{nameof(DatabaseSettings)}.{nameof(DbProvider)} is not configured", new[]
+                                                                                                                    {
+                                                                                                                        nameof(DbProvider)
+                                                                                                                    });
         }
 
         if (string.IsNullOrEmpty(ConnectionString))
         {
-            yield return new ValidationResult(
-                $"{nameof(DatabaseSettings)}.{nameof(ConnectionString)} is not configured",
-                new[] { nameof(ConnectionString) });
+            yield return new ValidationResult($"{nameof(DatabaseSettings)}.{nameof(ConnectionString)} is not configured", new[]
+                                                                                                                          {
+                                                                                                                              nameof(ConnectionString)
+                                                                                                                          });
         }
     }
 }
