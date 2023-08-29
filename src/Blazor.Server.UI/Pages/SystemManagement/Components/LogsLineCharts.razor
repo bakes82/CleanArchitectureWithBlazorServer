@@ -15,7 +15,7 @@
                              Name="Count"
                              XValue="@(e => e.Dt.ToString("MMM-d"))"
                              YValue="@(e => e.Total)"
-                             YAggregate="@(e => e.Sum(e => e.Total))"
+                             YAggregate="@(e => e.Sum(s => s.Total))"
                              SeriesType="SeriesType.Bar"/>
         </ApexChart>
     </MudPaper>

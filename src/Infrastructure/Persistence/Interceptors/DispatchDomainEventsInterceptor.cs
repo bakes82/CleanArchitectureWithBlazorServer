@@ -36,11 +36,12 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
                                                   .Where(e => e.Entity.DomainEvents.Any() && e.State == EntityState.Deleted)
                                                   .Select(e => e.Entity);
 
-        List<DomainEvent> domainEvents = entities.SelectMany(e => e.DomainEvents)
-                                                 .ToList();
+        IEnumerable<BaseEntity> baseEntities = entities.ToList();
+        List<DomainEvent> domainEvents = baseEntities.SelectMany(e => e.DomainEvents)
+                                                     .ToList();
 
-        entities.ToList()
-                .ForEach(e => e.ClearDomainEvents());
+        baseEntities.ToList()
+                    .ForEach(e => e.ClearDomainEvents());
 
         foreach (DomainEvent domainEvent in domainEvents)
         {
@@ -59,11 +60,12 @@ public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
                                                   .Where(e => e.Entity.DomainEvents.Any())
                                                   .Select(e => e.Entity);
 
-        List<DomainEvent> domainEvents = entities.SelectMany(e => e.DomainEvents)
-                                                 .ToList();
+        IEnumerable<BaseEntity> baseEntities = entities.ToList();
+        List<DomainEvent> domainEvents = baseEntities.SelectMany(e => e.DomainEvents)
+                                                     .ToList();
 
-        entities.ToList()
-                .ForEach(e => e.ClearDomainEvents());
+        baseEntities.ToList()
+                    .ForEach(e => e.ClearDomainEvents());
 
         foreach (DomainEvent domainEvent in domainEvents)
         {

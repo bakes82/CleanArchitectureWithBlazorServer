@@ -234,7 +234,7 @@
             var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)
             {
-                var assignResult = await UserManager.AddToRoleAsync(user, RoleName.Basic);
+                await UserManager.AddToRoleAsync(user, RoleName.Basic);
             }
             await UserManager.AddLoginAsync(user, new UserLoginInfo(provider, userName, accessToken));
         }

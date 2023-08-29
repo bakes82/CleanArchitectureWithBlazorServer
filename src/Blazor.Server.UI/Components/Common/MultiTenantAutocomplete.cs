@@ -2,7 +2,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 
 namespace Blazor.Server.UI.Components.Common;
 
-public class MultiTenantAutocomplete : MudAutocomplete<string>
+public abstract class MultiTenantAutocomplete : MudAutocomplete<string>
 {
     [Inject]
     private ITenantService TenantsService { get; set; } = default!;
@@ -14,7 +14,7 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
 
     private void tenantsService_OnChange()
     {
-        InvokeAsync(() => StateHasChanged());
+        InvokeAsync(StateHasChanged);
     }
 
     protected override void Dispose(bool disposing)
@@ -56,7 +56,6 @@ public class MultiTenantAutocomplete : MudAutocomplete<string>
     {
         return TenantsService.DataSource.Where(x => x.Id == val)
                              .Select(x => x.Name)
-                             .FirstOrDefault() ??
-               "";
+                             .FirstOrDefault() ?? "";
     }
 }

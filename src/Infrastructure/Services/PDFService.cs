@@ -128,8 +128,7 @@ public class PdfService : IPdfService
                                                                                .Text($"{value}");
                                                                       }
 
-                                                                      ;
-
+                                                                      
                                                                       colIndex += 1;
                                                                   }
                                                               }

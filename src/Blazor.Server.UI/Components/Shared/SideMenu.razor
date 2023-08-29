@@ -69,7 +69,7 @@
     }
 
     <MudNavMenu>
-        @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
+        @foreach (var section in MenuSections.Where(x => x.Roles == null || x.Roles.Any(a => Roles.Contains(a))))
         {
             @if (section is not null)
             {

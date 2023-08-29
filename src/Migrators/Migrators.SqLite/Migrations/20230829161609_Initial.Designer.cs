@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CleanArchitecture.Blazor.Migrators.SqLite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230828200808_Initial")]
+    [Migration("20230829161609_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

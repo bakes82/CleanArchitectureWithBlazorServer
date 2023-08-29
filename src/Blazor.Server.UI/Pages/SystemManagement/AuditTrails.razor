@@ -148,7 +148,7 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L[_currentDto.GetClassDescription()];
-        var state = await AuthState;
+        await AuthState;
     }
 
     private async Task<GridData<AuditTrailDto>> ServerReload(GridState<AuditTrailDto> state)

@@ -24,7 +24,7 @@ public partial class UserMenu : FluxorComponent
         DialogParameters parameters = new DialogParameters { { nameof(LogoutConfirmation.ContentText), $"{ConstantString.LogoutConfirmation}" }, { nameof(LogoutConfirmation.Color), Color.Error } };
 
         DialogOptions     options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-        IDialogReference? dialog  = DialogService.Show<LogoutConfirmation>(ConstantString.LogoutConfirmationTitle, parameters, options);
+        IDialogReference? dialog  = await DialogService.ShowAsync<LogoutConfirmation>(ConstantString.LogoutConfirmationTitle, parameters, options);
         DialogResult?     result  = await dialog.Result;
         if (!result.Canceled)
         {

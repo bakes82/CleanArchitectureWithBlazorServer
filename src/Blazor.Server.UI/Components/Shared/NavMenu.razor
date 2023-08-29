@@ -7,8 +7,8 @@
                              Color="@Color.Default"
                              Icon="@Icons.Material.Filled.MenuOpen"
                              Size="Size.Medium"
-                             Toggled="SideMenuDrawerOpen"
-                             ToggledChanged="ToggleSideMenuDrawer"
+                             Toggled="@(SideMenuDrawerOpen)"
+                             ToggledChanged="@(ToggleSideMenuDrawer)"
                              ToggledColor="@Color.Default"
                              ToggledIcon="@Icons.Material.Filled.Close"/>
 
@@ -19,7 +19,7 @@
             <MudIconButton Color="Color.Default"
                            Edge="Edge.Start"
                            Icon="@Icons.Material.Filled.Search"
-                           OnClick="OpenCommandPalette"/>
+                           OnClick="@(OpenCommandPalette)"/>
         </MudTooltip>
         <MudSpacer/>
         <MudTooltip Arrow="true"
@@ -45,13 +45,13 @@
             <MudIconButton Color="Color.Default"
                            Edge="Edge.Start"
                            Icon="@Icons.Material.Filled.Search"
-                           OnClick="OpenCommandPalette"/>
+                           OnClick="@(OpenCommandPalette)"/>
         </MudTooltip>
         <MudSpacer/>
         <NotificationMenu/>
     </MudHidden>
-    <UserMenu OnSettingClick="OnSettingClick"/>
-    <MudDivider Class="mx-3 my-5" DividerType="DividerType.Middle" Vertical="true" FlexItem="true"></MudDivider>
+    <UserMenu OnSettingClick="@(OnSettingClick)"/>
+    <MudDivider Class="mx-3 my-5" DividerType="@DividerType.Middle" Vertical="true" FlexItem="true"></MudDivider>
     <MudText Color="@Color.Primary" Typo="Typo.h6">
         <b>@Settings.Company</b>
     </MudText>

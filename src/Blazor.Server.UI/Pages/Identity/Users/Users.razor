@@ -801,7 +801,6 @@
             _processing = true;
             var userId = model.UserId!;
             var user = await UserManager.FindByIdAsync(userId) ?? throw new NotFoundException($"Application user Not Found {userId}.");
-            ;
             model.Assigned = !model.Assigned;
             if (model is { Assigned: true, ClaimType: not null, ClaimValue: not null })
             {
@@ -831,7 +830,7 @@
         try
         {
             _exporting = true;
-            Expression<Func<ApplicationUser, bool>> searchPredicate = x => (x.UserName!.Contains(_searchString) || x.Email!.Contains(_searchString) || x.DisplayName!.Contains(_searchString) || x.PhoneNumber!.Contains(_searchString) || x.TenantName!.Contains(_searchString) || x.Provider!.Contains(_searchString)) && (_searchRole == null || _searchRole != null && x.UserRoles.Any(x => x.Role.Name == _searchRole));
+            Expression<Func<ApplicationUser, bool>> searchPredicate = x => (x.UserName!.Contains(_searchString) || x.Email!.Contains(_searchString) || x.DisplayName!.Contains(_searchString) || x.PhoneNumber!.Contains(_searchString) || x.TenantName!.Contains(_searchString) || x.Provider!.Contains(_searchString)) && (_searchRole == null || _searchRole != null && x.UserRoles.Any(a => a.Role.Name == _searchRole));
             var items = await UserManager.Users.Where(searchPredicate)
                                          .Select(x => new ApplicationUserDto
                                                       {

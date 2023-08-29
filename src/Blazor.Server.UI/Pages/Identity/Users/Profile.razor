@@ -300,7 +300,7 @@
             await _form!.Validate();
             if (_form.IsValid)
             {
-                var state = await AuthState;
+                await AuthState;
                 var user = await UserManager.FindByIdAsync(Model.UserId!);
                 user!.PhoneNumber = Model.PhoneNumber;
                 user.DisplayName = Model.DisplayName;

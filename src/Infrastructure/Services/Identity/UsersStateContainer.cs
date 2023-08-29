@@ -10,7 +10,7 @@ public class UsersStateContainer : IUsersStateContainer
 
     public void Update(string connectionId, string? name)
     {
-        UsersByConnectionId.AddOrUpdate(connectionId, name ?? String.Empty, (key, oldValue) => name ?? String.Empty);
+        UsersByConnectionId.AddOrUpdate(connectionId, name ?? String.Empty, (_, _) => name ?? String.Empty);
         NotifyStateChanged();
     }
 

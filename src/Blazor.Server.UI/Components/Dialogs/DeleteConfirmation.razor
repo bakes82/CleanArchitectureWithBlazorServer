@@ -1,5 +1,4 @@
 @using Severity = MudBlazor.Severity
-@inject IStringLocalizer<DeleteConfirmation> L
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
@@ -11,8 +10,8 @@
         <MudText>@ContentText</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton StartIcon="@Icons.Material.Filled.Cancel" OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">@ConstantString.Confirm</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Cancel" OnClick="@(Cancel)">@ConstantString.Cancel</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="@Color.Error" Variant="@Variant.Filled" OnClick="@(Submit)">@ConstantString.Confirm</MudButton>
     </DialogActions>
 </MudDialog>
 

@@ -1,11 +1,10 @@
-@inject IStringLocalizer<ConfirmationDialog> L
 <MudDialog>
     <DialogContent>
         <MudText>@ContentText</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton StartIcon="@Icons.Material.Filled.Cancel" OnClick="Cancel">@L[ConstantString.Cancel]</MudButton>
-        <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">@L[ConstantString.Confirm]</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Cancel" OnClick="@(Cancel)">@ConstantString.Cancel</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Delete" Color="Color.Error" Variant="Variant.Filled" OnClick="@(Submit)">@ConstantString.Confirm</MudButton>
     </DialogActions>
 </MudDialog>
 

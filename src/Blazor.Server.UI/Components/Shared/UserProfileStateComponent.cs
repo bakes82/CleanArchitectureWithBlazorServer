@@ -66,6 +66,6 @@ public class UserProfileStateComponent : ComponentBase, INotificationHandler<Upd
     private void UserProfileChangedHandler(object? sender, UpdateUserProfileEventArgs e)
     {
         UserProfile = e.UserProfile;
-        InvokeAsync(() => StateHasChanged());
+        InvokeAsync(StateHasChanged);
     }
 }

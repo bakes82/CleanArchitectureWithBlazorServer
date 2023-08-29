@@ -84,7 +84,7 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
         {
             DialogOptions options = new DialogOptions { NoHeader = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
 
-            IDialogReference? commandPalette = DialogService.Show<CommandPalette>("", options);
+            IDialogReference? commandPalette = await DialogService.ShowAsync<CommandPalette>("", options);
             _commandPaletteOpen = true;
 
             await commandPalette.Result;

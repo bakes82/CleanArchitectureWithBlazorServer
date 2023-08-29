@@ -91,11 +91,12 @@ public class ApplicationDbContextInitializer
         ApplicationRole     administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group" };
         ApplicationRole     userRole          = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
         IEnumerable<string> permissions       = GetAllPermissions();
+        IEnumerable<string> permissionList        = permissions.ToList();
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
             await _roleManager.CreateAsync(administratorRole);
 
-            foreach (string permission in permissions)
+            foreach (string permission in permissionList)
             {
                 await _roleManager.AddClaimAsync(administratorRole, new Claim(ApplicationClaimTypes.Permission, permission));
             }
@@ -104,7 +105,7 @@ public class ApplicationDbContextInitializer
         if (_roleManager.Roles.All(r => r.Name != userRole.Name))
         {
             await _roleManager.CreateAsync(userRole);
-            foreach (string permission in permissions)
+            foreach (string permission in permissionList)
             {
                 if (permission.StartsWith("Permissions.Products"))
                 {

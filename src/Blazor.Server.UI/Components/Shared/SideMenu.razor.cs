@@ -32,7 +32,5 @@ public partial class SideMenu : FluxorComponent
 
     private string[] Roles =>
         UserProfile?.AssignedRoles ??
-        new string[]
-        {
-        };
+        Array.Empty<string>();
 }

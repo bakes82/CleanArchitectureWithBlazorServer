@@ -3,11 +3,11 @@
 @inject IStringLocalizer<Users> L
 <MudDialog>
     <DialogContent>
-        <_UserForm @ref="@_userForm" Model="Model" OnFormSubmit="OnFormSubmitHandler"></_UserForm>
+        <_UserForm @ref="@_userForm" Model="Model" OnFormSubmit="@(OnFormSubmitHandler)"></_UserForm>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">@ConstantString.Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">@ConstantString.Ok</MudButton>
+        <MudButton OnClick="@(Cancel)">@ConstantString.Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@(Submit)">@ConstantString.Ok</MudButton>
     </DialogActions>
 </MudDialog>
 

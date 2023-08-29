@@ -159,7 +159,7 @@
 @code {
     private LogsLineCharts? _chartComponent;
     private string Title { get; set; } = "Logs";
-    private string _searchString = string.Empty;
+    
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new LogDto();
     private readonly int _defaultPageSize = 15;
@@ -266,8 +266,11 @@
             {
                 var command = new ClearLogsCommand();
                 var result = await Mediator.Send(command);
-                await _table.ReloadServerData();
-                Snackbar.Add(L["Logs have been erased"], Severity.Info);
+                if (result.Succeeded)
+                {
+                    await _table.ReloadServerData();
+                    Snackbar.Add(L["Logs have been erased"], Severity.Info);    
+                }
             }
             finally
             {
