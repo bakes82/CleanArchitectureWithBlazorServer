@@ -76,38 +76,38 @@
     <component type="typeof(HeadOutlet)" render-mode="Server"/>
 </head>
 <body>
-<div id="reconnect-modal" style="display: none;">Connection lost -- please wait, attempting to reconnect</div>
-@RenderBody()
-<div id="blazor-error-ui">
-    <environment include="Staging,Production">
-        An error has occurred. This application may no longer respond until reloaded.
-    </environment>
-    <environment include="Development">
-        An unhandled exception has occurred. See browser dev tools for details.
-    </environment>
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
+    <div id="reconnect-modal" style="display: none;">Connection lost -- please wait, attempting to reconnect</div>
+    @RenderBody()
+    <div id="blazor-error-ui">
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
 
-<script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
-<script src="~/js/msal/authConfig.js"></script>
+    <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.23.0/js/msal-browser.min.js"></script>
+    <script src="~/js/msal/authConfig.js"></script>
 
-<script src="https://accounts.google.com/gsi/client"></script>
-<script src="~/js/gapi/auth2config.js"></script>
-<script src="_content/Blazor-ApexCharts/js/apex-charts.min.js"></script>
-<script src="_content/Blazor-ApexCharts/js/blazor-apex-charts.js"></script>
-<script src="_framework/blazor.server.js" autostart="false"></script>
-<script src="~/js/boot.js"></script>
-<script src="_content/MudBlazor/MudBlazor.min.js"></script>
-<script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
-<script src="_content/BlazorTime/blazorTime.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
-<script src="https://d3js.org/d3.v7.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.0.1-next.1"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="~/js/gapi/auth2config.js"></script>
+    <script src="_content/Blazor-ApexCharts/js/apex-charts.min.js"></script>
+    <script src="_content/Blazor-ApexCharts/js/blazor-apex-charts.js"></script>
+    <script src="_framework/blazor.server.js" autostart="false"></script>
+    <script src="~/js/boot.js"></script>
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/CodeBeam.MudBlazor.Extensions/MudExtensions.min.js"></script>
+    <script src="_content/BlazorTime/blazorTime.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-org-chart@3.0.1-next.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-flextree@2.1.2/build/d3-flextree.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         async function externalLogin(provider, dotNetHelper) {
             if (provider == 'Microsoft') {

@@ -47,7 +47,7 @@ Blazor technology.
 - Manage User secrets to save the password
     - cmd: `dotnet user-secrets init`
     -
-    cmd: `dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
+  cmd: `dotnet user-secrets -p Blazor.Server.UI.csproj set "Kestrel:Certificates:Development:Password" "Password@123"`
 
 ## Code Generator Extension for visual studio.net 2022
 

@@ -90,7 +90,7 @@ public class AuthController : Controller
         {
             return Unauthorized();
         }
-        
+
         await _signInManager.SignInAsync(user, true);
         return Redirect("/");
     }

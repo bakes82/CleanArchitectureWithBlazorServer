@@ -3,7 +3,6 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using CleanArchitecture.Blazor.Application.Services.MultiTenant;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application;

@@ -5,10 +5,11 @@ namespace CleanArchitecture.Blazor.Domain.Common;
 public abstract class BaseEntity : IEntity<int>
 {
     private readonly List<DomainEvent> _domainEvents = new List<DomainEvent>();
-    public virtual   int               Id { get; set; }
 
     [NotMapped]
     public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    public virtual int Id { get; set; }
 
     public void AddDomainEvent(DomainEvent domainEvent)
     {

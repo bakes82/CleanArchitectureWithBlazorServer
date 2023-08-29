@@ -13,7 +13,7 @@ public class LogsTimeLineChartDataQuery : ICacheableRequest<List<LogTimeLineDto>
 public class LogsChartDataQueryHandler : IRequestHandler<LogsTimeLineChartDataQuery, List<LogTimeLineDto>>
 
 {
-    private readonly IApplicationDbContext                      _context;
+    private readonly IApplicationDbContext                       _context;
     private readonly IStringLocalizer<LogsChartDataQueryHandler> _localizer;
 
     public LogsChartDataQueryHandler(IApplicationDbContext context, IStringLocalizer<LogsChartDataQueryHandler> localizer)

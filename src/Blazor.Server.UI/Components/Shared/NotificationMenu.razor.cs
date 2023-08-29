@@ -6,7 +6,7 @@ public partial class NotificationMenu : MudComponentBase
 {
     private IDictionary<NotificationMessage, bool>? _messages = null;
 
-    private bool _newNotificationsAvailable = false;
+    private bool _newNotificationsAvailable;
 
     [Inject]
     public INotificationService NotificationService { get; set; } = null!;

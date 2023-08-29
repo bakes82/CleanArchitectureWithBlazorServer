@@ -1,5 +1,4 @@
 @page "/user/profile"
-
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = MudBlazor.Severity
@@ -216,14 +215,14 @@
     {
         var currerntuserName = (await AuthState).User.GetUserName();
         var list = await UserManager.Users.Include(x => x.UserRoles)
-                                     .ThenInclude(x => x.Role)
-                                     .Include(x => x.Superior)
-                                     .ToListAsync();
+                                    .ThenInclude(x => x.Role)
+                                    .Include(x => x.Superior)
+                                    .ToListAsync();
         foreach (var item in list)
         {
             var roles = await UserManager.GetRolesAsync(item);
             var count = await UserManager.Users.Where(x => x.SuperiorId == item.Id)
-                                          .CountAsync();
+                                         .CountAsync();
             var orgitem = new OrgItem();
             orgitem.Id = item.Id;
             orgitem.Name = item.DisplayName ?? item.UserName;

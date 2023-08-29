@@ -13,7 +13,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Tenant>     Tenants     { get; set; }
     public DbSet<Logger>     Loggers     { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
-    
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

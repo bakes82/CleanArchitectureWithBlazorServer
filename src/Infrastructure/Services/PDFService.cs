@@ -1,7 +1,6 @@
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using Document = QuestPDF.Fluent.Document;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services;
 
@@ -128,7 +127,6 @@ public class PdfService : IPdfService
                                                                                .Text($"{value}");
                                                                       }
 
-                                                                      
                                                                       colIndex += 1;
                                                                   }
                                                               }

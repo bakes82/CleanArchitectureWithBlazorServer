@@ -159,7 +159,7 @@
 @code {
     private LogsLineCharts? _chartComponent;
     private string Title { get; set; } = "Logs";
-    
+
     private MudDataGrid<LogDto> _table = default!;
     private readonly LogDto _currentDto = new LogDto();
     private readonly int _defaultPageSize = 15;
@@ -269,7 +269,7 @@
                 if (result.Succeeded)
                 {
                     await _table.ReloadServerData();
-                    Snackbar.Add(L["Logs have been erased"], Severity.Info);    
+                    Snackbar.Add(L["Logs have been erased"], Severity.Info);
                 }
             }
             finally

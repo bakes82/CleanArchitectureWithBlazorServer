@@ -206,7 +206,7 @@ public class IdentityService : IIdentityService
 
     public async Task UpdateLiveStatus(string userId, bool isLive, CancellationToken cancellation = default)
     {
-        ApplicationUser? user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && x.IsLive != isLive, cancellationToken: cancellation);
+        ApplicationUser? user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId && x.IsLive != isLive, cancellation);
         if (user is not null)
         {
             user.IsLive = isLive;
@@ -235,7 +235,7 @@ public class IdentityService : IIdentityService
                                                                                                        return await _userManager.Users.Include(x => x.UserRoles)
                                                                                                                                 .ThenInclude(x => x.Role)
                                                                                                                                 .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
-                                                                                                                                .ToListAsync(cancellationToken: cancellationToken);
+                                                                                                                                .ToListAsync(cancellationToken);
                                                                                                    }
 
                                                                                                    return await _userManager.Users.Where(x => x.TenantId == id)

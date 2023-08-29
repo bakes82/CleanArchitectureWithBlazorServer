@@ -107,25 +107,25 @@
         {
             <MudSimpleTable Dense="true" Hover="true" Class="flex-grow-1">
                 <thead>
-                <tr>
-                    <th>Nr</th>
-                    <th>Sign</th>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Molar mass</th>
-                </tr>
+                    <tr>
+                        <th>Nr</th>
+                        <th>Sign</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Molar mass</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach (var item in _elements)
-                {
-                    <tr>
-                        <td>@item.Number</td>
-                        <td>@item.Sign</td>
-                        <td>@item.Name</td>
-                        <td>@item.Position</td>
-                        <td>@item.Molar</td>
-                    </tr>
-                }
+                    @foreach (var item in _elements)
+                    {
+                        <tr>
+                            <td>@item.Number</td>
+                            <td>@item.Sign</td>
+                            <td>@item.Name</td>
+                            <td>@item.Position</td>
+                            <td>@item.Molar</td>
+                        </tr>
+                    }
                 </tbody>
             </MudSimpleTable>
         }
@@ -289,56 +289,56 @@
     private GitHubRepository? GitHubRepo { get; set; } = new GitHubRepository();
 
     private readonly IEnumerable<Element> _elements = new List<Element>
-                                                     {
-                                                         new Element
-                                                         {
-                                                             Number = 1,
-                                                             Sign = "H",
-                                                             Name = "Hydrogen",
-                                                             Position = 0,
-                                                             Molar = 1.00794
-                                                         },
-                                                         new Element
-                                                         {
-                                                             Number = 2,
-                                                             Sign = "He",
-                                                             Name = "Helium",
-                                                             Position = 17,
-                                                             Molar = 4.002602
-                                                         },
-                                                         new Element
-                                                         {
-                                                             Number = 3,
-                                                             Sign = "Li",
-                                                             Name = "Lithium",
-                                                             Position = 0,
-                                                             Molar = 6.941
-                                                         },
-                                                         new Element
-                                                         {
-                                                             Number = 4,
-                                                             Sign = "Be",
-                                                             Name = "Beryllium",
-                                                             Position = 1,
-                                                             Molar = 9.012182
-                                                         },
-                                                         new Element
-                                                         {
-                                                             Number = 5,
-                                                             Sign = "C",
-                                                             Name = "Carbon",
-                                                             Position = 13,
-                                                             Molar = 12.0107
-                                                         },
-                                                         new Element
-                                                         {
-                                                             Number = 6,
-                                                             Sign = "O",
-                                                             Name = "Oxygen",
-                                                             Position = 15,
-                                                             Molar = 15.9994
-                                                         }
-                                                     };
+                                                      {
+                                                          new Element
+                                                          {
+                                                              Number = 1,
+                                                              Sign = "H",
+                                                              Name = "Hydrogen",
+                                                              Position = 0,
+                                                              Molar = 1.00794
+                                                          },
+                                                          new Element
+                                                          {
+                                                              Number = 2,
+                                                              Sign = "He",
+                                                              Name = "Helium",
+                                                              Position = 17,
+                                                              Molar = 4.002602
+                                                          },
+                                                          new Element
+                                                          {
+                                                              Number = 3,
+                                                              Sign = "Li",
+                                                              Name = "Lithium",
+                                                              Position = 0,
+                                                              Molar = 6.941
+                                                          },
+                                                          new Element
+                                                          {
+                                                              Number = 4,
+                                                              Sign = "Be",
+                                                              Name = "Beryllium",
+                                                              Position = 1,
+                                                              Molar = 9.012182
+                                                          },
+                                                          new Element
+                                                          {
+                                                              Number = 5,
+                                                              Sign = "C",
+                                                              Name = "Carbon",
+                                                              Position = 13,
+                                                              Molar = 12.0107
+                                                          },
+                                                          new Element
+                                                          {
+                                                              Number = 6,
+                                                              Sign = "O",
+                                                              Name = "Oxygen",
+                                                              Position = 15,
+                                                              Molar = 15.9994
+                                                          }
+                                                      };
 
     public class Element
     {

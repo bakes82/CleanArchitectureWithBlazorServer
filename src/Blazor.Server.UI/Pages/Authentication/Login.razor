@@ -1,7 +1,7 @@
 @page "/pages/authentication/login"
 @inject AccessTokenProvider TokenProvider
 @inject IJSRuntime Js
-@inherits OwningComponentBase
+@inject IStringLocalizer<Login> L
 @using CleanArchitecture.Blazor.Infrastructure.Services.JWT
 @using Microsoft.AspNetCore.DataProtection
 @using CleanArchitecture.Blazor.Application.Common.Security
@@ -10,7 +10,7 @@
 @using Severity = MudBlazor.Severity
 @using Blazor.Server.UI.Pages.Identity.Users
 @using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers
-@inject IStringLocalizer<Login> L
+@inherits OwningComponentBase
 
 <PageTitle>@_title</PageTitle>
 <AuthorizeView>

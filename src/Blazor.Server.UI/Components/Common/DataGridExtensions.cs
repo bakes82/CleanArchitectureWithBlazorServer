@@ -33,7 +33,8 @@ public static class DataGridExtensions
                                                          .Where(m => m.Name == (sortDefinition.Descending ? "OrderByDescending" : "OrderBy") && m.IsGenericMethodDefinition) // ensure selecting the right overload
                                                          .Single(m => m.GetParameters()
                                                                        .ToList()
-                                                                       .Count == 2);
+                                                                       .Count ==
+                                                                      2);
                 MethodInfo genericMethod = sortMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
                 orderedQuery = (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[]
                                                                                           {
@@ -47,7 +48,8 @@ public static class DataGridExtensions
                                                          .Where(m => m.Name == (sortDefinition.Descending ? "ThenByDescending" : "ThenBy") && m.IsGenericMethodDefinition) // ensure selecting the right overload
                                                          .Single(m => m.GetParameters()
                                                                        .ToList()
-                                                                       .Count == 2);
+                                                                       .Count ==
+                                                                      2);
                 MethodInfo genericMethod = sortMethod.MakeGenericMethod(typeof(T), orderByProperty.Type);
                 orderedQuery = (IOrderedQueryable<T>?)genericMethod.Invoke(genericMethod, new object[]
                                                                                           {

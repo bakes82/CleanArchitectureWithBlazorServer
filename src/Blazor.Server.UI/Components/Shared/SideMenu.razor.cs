@@ -30,7 +30,5 @@ public partial class SideMenu : FluxorComponent
     [Inject]
     private LayoutService LayoutService { get; set; } = default!;
 
-    private string[] Roles =>
-        UserProfile?.AssignedRoles ??
-        Array.Empty<string>();
+    private string[] Roles => UserProfile?.AssignedRoles ?? Array.Empty<string>();
 }

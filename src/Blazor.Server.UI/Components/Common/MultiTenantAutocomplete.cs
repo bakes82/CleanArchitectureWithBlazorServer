@@ -56,6 +56,7 @@ public abstract class MultiTenantAutocomplete : MudAutocomplete<string>
     {
         return TenantsService.DataSource.Where(x => x.Id == val)
                              .Select(x => x.Name)
-                             .FirstOrDefault() ?? "";
+                             .FirstOrDefault() ??
+               "";
     }
 }

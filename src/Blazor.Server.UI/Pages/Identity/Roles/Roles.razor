@@ -180,7 +180,7 @@
                 </PropertyColumn>
             </Columns>
             <PagerContent>
-                <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"/>
+                <MudDataGridPager PageSizeOptions="@(new[] { 10, 15, 30, 50, 100, 500, 1000 })"></MudDataGridPager>
             </PagerContent>
         </MudDataGrid>
 
@@ -565,4 +565,5 @@
         _uploading = false;
         return Task.CompletedTask;
     }
+
 }

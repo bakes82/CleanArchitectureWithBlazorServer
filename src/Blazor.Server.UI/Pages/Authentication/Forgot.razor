@@ -89,7 +89,7 @@
         {
             _sending = true;
             _user = await UserManager.FindByEmailAsync(_emailAddress) ?? throw new NotFoundException($"Application user {_emailAddress} Not Found.");
-            
+
             if (_user is null)
             {
                 Snackbar.Add(L["No user found by email, please contact the administrator"], Severity.Error);

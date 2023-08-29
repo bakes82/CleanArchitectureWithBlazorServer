@@ -4,26 +4,21 @@ public class Result : IResult
 {
     internal Result()
     {
-        Errors = new string[]
-                 {
-                 };
+        Errors = Array.Empty<string>();
     }
 
-    internal Result(bool succeeded, IEnumerable<string> errors)
+    private Result(bool succeeded, IEnumerable<string> errors)
     {
         Succeeded = succeeded;
         Errors    = errors.ToArray();
     }
 
+    public string ErrorMessage =>
+        string.Join(", ", Errors);
+
     public bool Succeeded { get; init; }
 
     public string[] Errors { get; init; }
-
-    public string ErrorMessage =>
-        string.Join(", ", Errors ??
-                          new string[]
-                          {
-                          });
 
     public static Result Success()
     {

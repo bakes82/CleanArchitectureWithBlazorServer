@@ -91,7 +91,7 @@ public class ApplicationDbContextInitializer
         ApplicationRole     administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group" };
         ApplicationRole     userRole          = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
         IEnumerable<string> permissions       = GetAllPermissions();
-        IEnumerable<string> permissionList        = permissions.ToList();
+        IEnumerable<string> permissionList    = permissions.ToList();
         if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
         {
             await _roleManager.CreateAsync(administratorRole);
