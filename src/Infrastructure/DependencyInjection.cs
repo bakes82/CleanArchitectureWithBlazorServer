@@ -15,12 +15,15 @@ public static class DependencyInjection
     {
         services.Configure<DashboardSettings>(configuration.GetSection(DashboardSettings.Key));
         services.Configure<DatabaseSettings>(configuration.GetSection(DatabaseSettings.Key));
+        services.Configure<HangfireSettings>(configuration.GetSection(HangfireSettings.Key));
         services.Configure<AppConfigurationSettings>(configuration.GetSection(AppConfigurationSettings.Key));
         services.AddSingleton(s => s.GetRequiredService<IOptions<DashboardSettings>>()
                                     .Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<DatabaseSettings>>()
                                     .Value);
         services.AddSingleton(s => s.GetRequiredService<IOptions<AppConfigurationSettings>>()
+                                    .Value);
+        services.AddSingleton(s => s.GetRequiredService<IOptions<HangfireSettings>>()
                                     .Value);
         services.AddScoped<AuthenticationStateProvider, BlazorAuthStateProvider>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
@@ -53,7 +56,14 @@ public static class DependencyInjection
 
         services.AddLocalizationServices();
         services.AddServices();
-        services.AddHangfireService();
+
+        var hangfireConfig = configuration.GetSection(HangfireSettings.Key).Get<HangfireSettings>();
+        
+        if (hangfireConfig?.Enabled ?? false)
+        {
+            services.AddHangfireService();
+        }
+        
         services.AddSerialization();
         services.AddMessageServices(configuration);
         services.AddSignalRServices();

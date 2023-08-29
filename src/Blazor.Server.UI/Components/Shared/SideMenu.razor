@@ -86,12 +86,12 @@
 
                 @if (section.SectionItems is not null)
                 {
-                    @foreach (var sectionItem in section.SectionItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
+                    @foreach (var sectionItem in section.SectionItems.Where(x => x.Roles == null || x.Roles.Any(r => Roles.Contains(r))))
                     {
                         @if (sectionItem.IsParent && sectionItem.MenuItems is not null)
                         {
                             <MudNavGroup Icon="@sectionItem.Icon" Title="@L[sectionItem.Title]">
-                                @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(x => Roles.Contains(x))))
+                                @foreach (var menuItem in sectionItem.MenuItems.Where(x => x.Roles == null || x.Roles.Any(a => Roles.Contains(a))))
                                 {
                                     @if (SideMenuDrawerOpen)
                                     {
@@ -101,7 +101,7 @@
                                                 @if (menuItem.PageStatus != PageStatus.Completed)
                                                 {
                                                     <MudSpacer/>
-                                                    <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                                    <MudChip Class="mr-4" Color="@(menuItem.PageStatus == PageStatus.Disabled ? Color.Error : Color.Primary)" Size="Size.Small" Variant="Variant.Text">
                                                         @(L[menuItem.PageStatus.GetDescription()])
                                                     </MudChip>
                                                 }
@@ -119,7 +119,7 @@
                                     @if (sectionItem.PageStatus != PageStatus.Completed)
                                     {
                                         <MudSpacer/>
-                                        <MudChip Class="mr-4" Color="@Color.Primary" Size="Size.Small" Variant="Variant.Text">
+                                        <MudChip Class="mr-4" Color="@(sectionItem.PageStatus == PageStatus.Disabled ? Color.Error : Color.Primary)" Size="Size.Small" Variant="Variant.Text">
                                             @(L[sectionItem.PageStatus.GetDescription()])
                                         </MudChip>
                                     }

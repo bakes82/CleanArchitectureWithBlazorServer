@@ -1,11 +1,21 @@
 using Blazor.Server.UI.Models.SideMenu;
+using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Application.Constants.Role;
+using Microsoft.Extensions.Options;
 
 namespace Blazor.Server.UI.Services.Navigation;
 
 public class MenuService : IMenuService
 {
-    private readonly List<MenuSectionModel> _features = new List<MenuSectionModel>
+    private static HangfireSettings? _hangfireSettings;
+    
+    public MenuService(IOptions<HangfireSettings> hangfireSettingsOptions)
+    {
+        _hangfireSettings = hangfireSettingsOptions.Value;
+    }
+    public List<MenuSectionModel> GetMenu()
+    {
+        return new List<MenuSectionModel>
                                                         {
                                                             new MenuSectionModel
                                                             {
@@ -82,12 +92,12 @@ public class MenuService : IMenuService
                                                                                                    {
                                                                                                        new MenuSectionSubItemModel { Title = "Audit Trails", Href = "/system/audittrails", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Log", Href          = "/system/logs", PageStatus = PageStatus.Completed },
-                                                                                                       new MenuSectionSubItemModel { Title = "Jobs", Href         = "/jobs", PageStatus = PageStatus.Completed, Target = "_blank" }
+                                                                                                       new MenuSectionSubItemModel { Title = "Jobs", Href         = "/jobs", PageStatus = _hangfireSettings.Enabled ? PageStatus.Completed : PageStatus.Disabled, Target = "_blank" }
                                                                                                    }
                                                                                    }
                                                                                }
                                                             }
                                                         };
-
-    public IEnumerable<MenuSectionModel> Features => _features;
+    }
+    
 }

@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Application.Common.Configurations;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Hangfire;
@@ -31,17 +32,24 @@ public static class ApplicationBuilderExtensions
 
         app.UseRequestLocalization(localizationOptions);
         app.UseMiddlewares();
-        app.UseHangfireDashboard("/jobs", new DashboardOptions
-                                          {
-                                              Authorization = new[]
-                                                              {
-                                                                  new HangfireDashboardAuthorizationFilter()
-                                                              },
-                                              AsyncAuthorization = new[]
-                                                                   {
-                                                                       new HangfireDashboardAsyncAuthorizationFilter()
-                                                                   }
-                                          });
+        
+        var hangfireConfig = config.GetSection(HangfireSettings.Key).Get<HangfireSettings>();
+
+        if (hangfireConfig?.Enabled ?? false)
+        {
+            app.UseHangfireDashboard("/jobs", new DashboardOptions
+                                              {
+                                                  Authorization = new[]
+                                                                  {
+                                                                      new HangfireDashboardAuthorizationFilter()
+                                                                  },
+                                                  AsyncAuthorization = new[]
+                                                                       {
+                                                                           new HangfireDashboardAsyncAuthorizationFilter()
+                                                                       }
+                                              });
+        }
+
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();

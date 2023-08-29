@@ -25,7 +25,7 @@ public partial class SideMenu : FluxorComponent
     [Parameter]
     public EventCallback<bool> SideMenuDrawerOpenChanged { get; set; }
 
-    private IEnumerable<MenuSectionModel> MenuSections => MenuService.Features;
+    private IEnumerable<MenuSectionModel> MenuSections => MenuService.GetMenu();
 
     [Inject]
     private LayoutService LayoutService { get; set; } = default!;
