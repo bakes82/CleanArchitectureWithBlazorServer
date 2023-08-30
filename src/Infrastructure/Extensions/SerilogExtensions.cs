@@ -53,7 +53,7 @@ public static class SerilogExtensions
         if (configuration.GetValue<bool>("UseInMemoryDatabase")) return;
 
         var dbProvider =
-            configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.DBProvider)}");
+            configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.DbProvider)}");
         var connectionString =
             configuration.GetValue<string>($"{nameof(DatabaseSettings)}:{nameof(DatabaseSettings.ConnectionString)}");
         switch (dbProvider)
