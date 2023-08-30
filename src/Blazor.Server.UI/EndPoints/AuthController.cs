@@ -1,9 +1,9 @@
 using CleanArchitecture.Blazor.Application.Common.ExceptionHandlers;
-using CleanArchitecture.Blazor.Application.Constants.Role;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Blazor.Server.UI.EndPoints;
 
@@ -22,7 +22,7 @@ public class AuthController : Controller
         _signInManager          = signInManager;
     }
 
-    [HttpGet("/auth/login")]
+    /*[HttpGet("/auth/login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login(string token, string returnUrl)
     {
@@ -48,9 +48,9 @@ public class AuthController : Controller
         }
 
         return Unauthorized();
-    }
+    }*/
 
-    [HttpGet("/auth/externallogin")]
+    /*[HttpGet("/auth/externallogin")]
     [AllowAnonymous]
     public async Task<IActionResult> ExternalLogin(string provider, string userName, string name, string accessToken)
     {
@@ -93,6 +93,44 @@ public class AuthController : Controller
 
         await _signInManager.SignInAsync(user, true);
         return Redirect("/");
+    }*/
+
+    [HttpPost("/auth/externallogin")]
+    public IActionResult ExternalLogin(string provider)
+    {
+        // Redirect to external provider
+        string?                  redirectUrl = Url.Action("ExternalLoginCallback", "Auth");
+        AuthenticationProperties properties  = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return Challenge(properties, provider);
+    }
+
+    [HttpGet("/auth/externallogincallback")]
+    public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+    {
+        if (remoteError != null)
+        {
+            ModelState.AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+            return Redirect("/pages/authentication/login");
+        }
+
+        ExternalLoginInfo? info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+        {
+            return Redirect("/pages/authentication/Login");
+        }
+
+        SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false, true);
+
+        if (result.Succeeded)
+        {
+            return Redirect(returnUrl ?? "/"); // Change to your desired redirect
+        }
+        else
+        {
+            // If the user does not have an account, then you might need to redirect them 
+            // to a Blazor page where they can confirm the account creation or provide additional details.
+            return RedirectToPage("/ExternalLoginConfirmation");
+        }
     }
 
     [HttpGet("/auth/logout")]

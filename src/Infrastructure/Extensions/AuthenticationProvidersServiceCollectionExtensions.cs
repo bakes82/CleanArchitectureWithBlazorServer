@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Application.Common.Configurations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.Configuration;
@@ -20,18 +21,20 @@ public static class AuthenticationProvidersServiceCollectionExtensions
     /// </returns>
     public static AuthenticationBuilder TryConfigureMicrosoftAccount(this AuthenticationBuilder authenticationBuilder, IConfiguration configuration)
     {
-        string? microsoftAccountClientId     = configuration["Authentication:Microsoft:ClientId"];
-        string? microsoftAccountClientSecret = configuration["Authentication:Microsoft:ClientSecret"];
-        if (string.IsNullOrWhiteSpace(microsoftAccountClientId) || string.IsNullOrWhiteSpace(microsoftAccountClientSecret))
+        var     authenticationSettings       = configuration.GetSection(AuthenticationSettings.Key).Get<AuthenticationSettings>();
+        string? microsoftAccountClientId     = authenticationSettings?.Microsoft.ClientId;
+        string? microsoftAccountClientSecret = authenticationSettings?.Microsoft.ClientSecret;
+        
+        if (authenticationSettings != null && (!authenticationSettings.Microsoft.Enabled || string.IsNullOrWhiteSpace(microsoftAccountClientId) || string.IsNullOrWhiteSpace(microsoftAccountClientSecret)))
         {
             return authenticationBuilder;
         }
 
         return authenticationBuilder.AddMicrosoftAccount(options =>
                                                          {
-                                                             options.ClientId         = microsoftAccountClientId;
-                                                             options.ClientSecret     = microsoftAccountClientSecret;
-                                                             options.AccessDeniedPath = "/Login";
+                                                             options.ClientId              = microsoftAccountClientId;
+                                                             options.ClientSecret          = microsoftAccountClientSecret;
+                                                             options.AccessDeniedPath      = "/pages/authentication/login";
                                                          });
     }
 
@@ -46,17 +49,20 @@ public static class AuthenticationProvidersServiceCollectionExtensions
     /// </returns>
     public static AuthenticationBuilder TryConfigureGoogleAccount(this AuthenticationBuilder authenticationBuilder, IConfiguration configuration)
     {
-        string? googleAccountClientId     = configuration["Authentication:Google:ClientId"];
-        string? googleAccountClientSecret = configuration["Authentication:Google:ClientSecret"];
-        if (string.IsNullOrWhiteSpace(googleAccountClientId) || string.IsNullOrWhiteSpace(googleAccountClientSecret))
+        var     authenticationSettings    = configuration.GetSection(AuthenticationSettings.Key).Get<AuthenticationSettings>();
+        string? googleAccountClientId     = authenticationSettings?.Google.ClientId;
+        string? googleAccountClientSecret = authenticationSettings?.Google.ClientSecret;
+        if (authenticationSettings != null && (!authenticationSettings.Google.Enabled || string.IsNullOrWhiteSpace(googleAccountClientId) || string.IsNullOrWhiteSpace(googleAccountClientSecret)))
         {
             return authenticationBuilder;
         }
 
         return authenticationBuilder.AddGoogle(options =>
                                                {
-                                                   options.ClientId     = googleAccountClientId;
-                                                   options.ClientSecret = googleAccountClientSecret;
+                                                   options.ClientId         = googleAccountClientId;
+                                                   options.ClientSecret     = googleAccountClientSecret;
+                                                   options.SignInScheme     = IdentityConstants.ExternalScheme;
+                                                   options.AccessDeniedPath = "/pages/authentication/login";
                                                    options.Events = new OAuthEvents
                                                                     {
                                                                         OnCreatingTicket = c =>

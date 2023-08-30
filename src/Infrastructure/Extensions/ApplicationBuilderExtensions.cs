@@ -14,52 +14,52 @@ public static class ApplicationBuilderExtensions
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app, IConfiguration config)
     {
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
-        app.UseExceptionHandler("/Error");
-        if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
-        {
-            Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
-        }
-
-        app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")), RequestPath = new PathString("/Files") });
-
-        RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code)
-                                                                                                                                 .First())
-                                                                                         .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code)
-                                                                                                                                    .ToArray())
-                                                                                         .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code)
-                                                                                                                                      .ToArray());
-
-        app.UseRequestLocalization(localizationOptions);
-        app.UseMiddlewares();
-        
-        var hangfireConfig = config.GetSection(HangfireSettings.Key).Get<HangfireSettings>();
-
-        if (hangfireConfig?.Enabled ?? false)
-        {
-            app.UseHangfireDashboard("/jobs", new DashboardOptions
-                                              {
-                                                  Authorization = new[]
-                                                                  {
-                                                                      new HangfireDashboardAuthorizationFilter()
-                                                                  },
-                                                  AsyncAuthorization = new[]
-                                                                       {
-                                                                           new HangfireDashboardAsyncAuthorizationFilter()
-                                                                       }
-                                              });
-        }
-
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
-                         {
-                             endpoints.MapRazorPages();
-                             endpoints.MapControllers();
-                             endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
-                         });
+                                    app.UseStaticFiles();
+                                    app.UseExceptionHandler("/Error");
+                                    if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), @"Files")))
+                                    {
+                                        Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), @"Files"));
+                                    }
+                            
+                                    app.UseStaticFiles(new StaticFileOptions { FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Files")), RequestPath = new PathString("/Files") });
+                            
+                                    RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(LocalizationConstants.SupportedLanguages.Select(x => x.Code)
+                                                                                                                                                             .First())
+                                                                                                                     .AddSupportedCultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code)
+                                                                                                                                                                .ToArray())
+                                                                                                                     .AddSupportedUICultures(LocalizationConstants.SupportedLanguages.Select(x => x.Code)
+                                                                                                                                                                  .ToArray());
+                            
+                                    app.UseRequestLocalization(localizationOptions);
+                                    app.UseMiddlewares();
+                                    
+                                    var hangfireConfig = config.GetSection(HangfireSettings.Key).Get<HangfireSettings>();
+                            
+                                    if (hangfireConfig?.Enabled ?? false)
+                                    {
+                                        app.UseHangfireDashboard("/jobs", new DashboardOptions
+                                                                          {
+                                                                              Authorization = new[]
+                                                                                              {
+                                                                                                  new HangfireDashboardAuthorizationFilter()
+                                                                                              },
+                                                                              AsyncAuthorization = new[]
+                                                                                                   {
+                                                                                                       new HangfireDashboardAsyncAuthorizationFilter()
+                                                                                                   }
+                                                                          });
+                                    }
+                            
+                                    app.UseRouting();
+                                    app.UseAuthentication();
+                                    app.UseAuthorization();
+                            
+                                    app.UseEndpoints(endpoints =>
+                                                     {
+                                                         endpoints.MapRazorPages();
+                                                         endpoints.MapControllers();
+                                                         endpoints.MapHub<SignalRHub>(SignalR.HubUrl);
+                                                     });
 
         return app;
     }

@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Authentication
+@inject SignInManager<ApplicationUser> SignInManager
+
+<div class="col-md-4 offset-2">
+    <section>
+        <h4>Use a different service to log in:</h4>
+        <hr />
+        @if (_providers == null)
+        {
+            <p>Loading providers...</p>
+        }
+        else if (!_providers.Any())
+        {
+            <div>
+                <p>
+                    We couldn't find any external providers.
+                </p>
+            </div>
+        }
+        else
+        {
+            foreach (var provider in _providers)
+            {
+                <form method="post" action="/auth/ExternalLogin">
+                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name">
+                        Log in with @provider.DisplayName
+                    </button>
+                </form>
+            }
+        }
+    </section>
+</div>
+
+@code {
+    private IEnumerable<AuthenticationScheme>? _providers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _providers = await SignInManager.GetExternalAuthenticationSchemesAsync();
+    }
+}

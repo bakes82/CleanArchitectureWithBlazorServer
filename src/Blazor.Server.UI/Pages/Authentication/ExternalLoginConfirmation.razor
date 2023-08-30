@@ -1,0 +1,49 @@
+﻿@page "/pages/authentication/externalloginconfirmation"
+@attribute [AllowAnonymous]
+@using System.Security.Claims
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IStringLocalizer<Login> L
+@using Severity = MudBlazor.Severity
+
+<AuthorizeView>
+    <NotAuthorized Context="auth">
+        <h3>Confirm External Login</h3>
+
+        <button @onclick="ConfirmExternalLogin">Confirm and Continue</button>
+    </NotAuthorized>
+    <Authorized>
+            <RedirectToHome></RedirectToHome>
+            <MudAlert Severity="Severity.Info" Class="mt-8 mud-width-full" Style="max-width:500px;">@L["You are already logged in."]</MudAlert>
+        </Authorized>
+</AuthorizeView>
+
+@code
+{
+    private async Task ConfirmExternalLogin()
+    {
+        var info = await SignInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+        {
+    // Handle error, redirect to login page or show a message.
+            return;
+        }
+
+        var user = new ApplicationUser
+                   {
+                       UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                       Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                   };
+
+        var identityResult = await UserManager.CreateAsync(user);
+        if (identityResult.Succeeded)
+        {
+            var loginResult = await UserManager.AddLoginAsync(user, info);
+            if (loginResult.Succeeded)
+            {
+                await SignInManager.SignInAsync(user, isPersistent: false);
+    // Redirect the user to a success page or the main page.
+            }
+        }
+    }
+}

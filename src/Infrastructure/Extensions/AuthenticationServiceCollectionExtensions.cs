@@ -87,7 +87,9 @@ public static class AuthenticationServiceCollectionExtensions
                                                                                return Task.CompletedTask;
                                                                            }
                                                    };
-                              });
+                              })
+                .TryConfigureMicrosoftAccount(configuration)
+                .TryConfigureGoogleAccount(configuration);
 
         services.AddScoped<AccessTokenProvider>();
         services.AddScoped<UserDataProvider>();
