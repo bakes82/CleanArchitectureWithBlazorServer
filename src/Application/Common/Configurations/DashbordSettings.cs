@@ -1,3 +1,6 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
 namespace CleanArchitecture.Blazor.Application.Common.Configurations;
 
 /// <summary>
@@ -18,12 +21,12 @@ public class DashboardSettings
     /// <summary>
     ///     Specifies whether to enable the loading screen on navigation transitions
     /// </summary>
-    public bool EnableLoadingTransitionScreen { get; set; } = true;
+    public bool EnableLoadingTransitionScreen { get; set; } = false;
 
     /// <summary>
     ///     Specifies the duration of the loading screen in milliseconds
     /// </summary>
-    public int LoadingScreenDuration { get; set; } = 3000;
+    public int LoadingScreenDuration { get; set; } = 1000;
 
     /// <summary>
     ///     Specifies the duration of the loading screen on navigation in milliseconds

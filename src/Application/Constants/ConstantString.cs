@@ -1,5 +1,4 @@
 ﻿namespace CleanArchitecture.Blazor.Application.Constants;
-
 public static class ConstantString
 {
     //==========================================================//
@@ -46,7 +45,7 @@ public static class ConstantString
     public static string SaveSuccess   => Localize("Save successfully");
     public static string DeleteSuccess => Localize("Delete successfully");
     public static string DeleteFail    => Localize("Delete fail");
-    public static string UpdateSuccess => Localize("Update successfully");
+    public static string UpdateSuccess => Localize("AddOrUpdate successfully");  //ToDo: Add should be its own
     public static string CreateSuccess => Localize("Create successfully");
     public static string LoginSuccess  => Localize("Login successfully");
     public static string LogoutSuccess => Localize("Logout successfully");
