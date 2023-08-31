@@ -7,9 +7,6 @@ public class PickUserAutocomplete : MudAutocomplete<string>
 {
     private List<ApplicationUserDto>? _userList;
 
-    [Parameter]
-    public string TenantId { get; set; } = string.Empty;
-
     [Inject]
     private IUserDataProvider DataProvider { get; set; } = default!;
 
@@ -27,8 +24,7 @@ public class PickUserAutocomplete : MudAutocomplete<string>
     private Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken cancellation)
     {
         // if text is null or empty, show complete list
-        _userList = DataProvider.DataSource.Where(x => x.TenantId == TenantId)
-                                .ToList();
+        _userList = DataProvider.DataSource.ToList();
         List<string> result = new List<string>();
         if (_userList is not null && string.IsNullOrEmpty(value))
         {

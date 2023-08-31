@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Identity;
 using CleanArchitecture.Blazor.Infrastructure;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -60,7 +59,6 @@ public class Testing
 
         // Register testing version
         services.AddScoped(provider => Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
-        services.AddScoped(provider => Mock.Of<ITenantProvider>(s => s.TenantId   == _currentTenantId));
 
         _scopeFactory = services.BuildServiceProvider()
                                 .GetService<IServiceScopeFactory>();
@@ -179,12 +177,6 @@ public class Testing
 
         return await context.Set<TEntity>()
                             .CountAsync();
-    }
-
-    public static ITenantService CreateTenantsService()
-    {
-        IServiceScope scope = _scopeFactory.CreateScope();
-        return scope.ServiceProvider.GetRequiredService<ITenantService>();
     }
 
     [OneTimeTearDown]

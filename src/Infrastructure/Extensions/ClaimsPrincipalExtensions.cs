@@ -49,16 +49,6 @@ public static class ClaimsPrincipalExtensions
         return claimsPrincipal.FindFirstValue(ApplicationClaimTypes.SuperiorId);
     }
 
-    public static string? GetTenantName(this ClaimsPrincipal claimsPrincipal)
-    {
-        return claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantName);
-    }
-
-    public static string? GetTenantId(this ClaimsPrincipal claimsPrincipal)
-    {
-        return claimsPrincipal.FindFirstValue(ApplicationClaimTypes.TenantId);
-    }
-
     public static bool GetStatus(this ClaimsPrincipal claimsPrincipal)
     {
         return Convert.ToBoolean(claimsPrincipal.FindFirstValue(ApplicationClaimTypes.Status));

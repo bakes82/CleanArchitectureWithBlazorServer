@@ -77,7 +77,6 @@ public class MenuService : IMenuService
                                                                                        Icon     = Icons.Material.Filled.ManageAccounts,
                                                                                        MenuItems = new List<MenuSectionSubItemModel>
                                                                                                    {
-                                                                                                       new MenuSectionSubItemModel { Title = "Multi-Tenant", Href = "/system/tenants", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Users", Href        = "/identity/users", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Roles", Href        = "/identity/roles", PageStatus = PageStatus.Completed },
                                                                                                        new MenuSectionSubItemModel { Title = "Profile", Href      = "/user/profile", PageStatus   = PageStatus.Completed }

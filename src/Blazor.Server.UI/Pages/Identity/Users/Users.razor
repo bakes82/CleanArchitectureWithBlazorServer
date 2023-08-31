@@ -1,6 +1,5 @@
 @using LazyCache
 @using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Constants.ClaimTypes
 @using CleanArchitecture.Blazor.Application.Constants.Role
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
@@ -205,17 +204,6 @@
                         }
                     </CellTemplate>
                 </TemplateColumn>
-                <PropertyColumn Property="x => x.TenantId" Title="@L[_currentDto.GetMemberDescription(x => x.TenantName)]">
-                    <CellTemplate>
-                        <div class="d-flex flex-column">
-                            <MudText Typo="Typo.body2">@context.Item.TenantName</MudText>
-                            <MudText Typo="Typo.body2">@context.Item.TenantId</MudText>
-                        </div>
-                    </CellTemplate>
-                    <FooterTemplate>
-                        @L["Selected"]: @_selectedItems.Count
-                    </FooterTemplate>
-                </PropertyColumn>
                 <PropertyColumn Property="x => x.UserName" Title="@L[_currentDto.GetMemberDescription(x => x.UserName)]">
                     <CellTemplate>
                         <div class="d-flex align-content-center flex-wrap">
@@ -310,13 +298,7 @@
 
     [Inject]
     private IAppCache Cache { get; set; } = null!;
-
-    [Inject]
-    private ITenantProvider TenantProvider { get; set; } = default!;
-
-    [Inject]
-    private ITenantService TenantsService { get; set; } = null!;
-
+    
     [Inject]
     private IBlazorDownloadFileService BlazorDownloadFileService { get; set; } = null!;
 
@@ -379,8 +361,7 @@
                                                                                       .Contains(_searchString) || x.Email!.ToLower()
                                                                                                                           .Contains(_searchString) || x.DisplayName!.ToLower()
                                                                                                                                                                     .Contains(_searchString) || x.PhoneNumber!.ToLower()
-                                                                                                                                                                                                              .Contains(_searchString) || x.TenantName!.ToLower()
-                                                                                                                                                                                                                                                       .Contains(_searchString) || x.Provider!.ToLower()
+                                                                                                                                                                                                              .Contains(_searchString) || x.Provider!.ToLower()
                                                                                                                                                                                                                                                                                               .Contains(_searchString);
             var query = UserManager.Users.Where(searchPredicate);
             if (!string.IsNullOrEmpty(_searchRole))
@@ -460,8 +441,6 @@
                                       Provider = model.Provider,
                                       DisplayName = model.DisplayName,
                                       UserName = model.UserName,
-                                      TenantId = model.TenantId,
-                                      TenantName = model.TenantName,
                                       Email = model.Email,
                                       PhoneNumber = model.PhoneNumber,
                                       SuperiorId = model.SuperiorId,
@@ -504,7 +483,7 @@
                           MaxWidth = MaxWidth.Small,
                           FullWidth = true
                       };
-        var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
+        var dialog = await DialogService.ShowAsync<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Canceled)
         {
@@ -517,8 +496,6 @@
             user.Provider = item.Provider;
             user.UserName = item.UserName;
             user.IsActive = item.IsActive;
-            user.TenantId = item.TenantId;
-            user.TenantName = item.TenantName;
             user.SuperiorId = item.SuperiorId;
             var identityResult = await UserManager.UpdateAsync(user);
             if (identityResult.Succeeded)
@@ -830,7 +807,7 @@
         try
         {
             _exporting = true;
-            Expression<Func<ApplicationUser, bool>> searchPredicate = x => (x.UserName!.Contains(_searchString) || x.Email!.Contains(_searchString) || x.DisplayName!.Contains(_searchString) || x.PhoneNumber!.Contains(_searchString) || x.TenantName!.Contains(_searchString) || x.Provider!.Contains(_searchString)) && (_searchRole == null || _searchRole != null && x.UserRoles.Any(a => a.Role.Name == _searchRole));
+            Expression<Func<ApplicationUser, bool>> searchPredicate = x => (x.UserName!.Contains(_searchString) || x.Email!.Contains(_searchString) || x.DisplayName!.Contains(_searchString) || x.PhoneNumber!.Contains(_searchString) || x.Provider!.Contains(_searchString)) && (_searchRole == null || _searchRole != null && x.UserRoles.Any(a => a.Role.Name == _searchRole));
             var items = await UserManager.Users.Where(searchPredicate)
                                          .Select(x => new ApplicationUserDto
                                                       {
@@ -838,9 +815,7 @@
                                                           UserName = x.UserName!,
                                                           DisplayName = x.DisplayName,
                                                           Email = x.Email!,
-                                                          PhoneNumber = x.PhoneNumber,
-                                                          TenantId = x.TenantId,
-                                                          TenantName = x.TenantName
+                                                          PhoneNumber = x.PhoneNumber
                                                       })
                                          .ToListAsync();
             var result = await ExcelService.ExportAsync(items, new Dictionary<string, Func<ApplicationUserDto, object?>>
@@ -849,9 +824,7 @@
                                                                    { L["User Name"], item => item.UserName },
                                                                    { L["Display Name"], item => item.DisplayName },
                                                                    { L["Email"], item => item.Email },
-                                                                   { L["Phone Number"], item => item.PhoneNumber },
-                                                                   { L["Tenant Id"], item => item.TenantId },
-                                                                   { L["Tenant Name"], item => item.TenantName }
+                                                                   { L["Phone Number"], item => item.PhoneNumber }
                                                                }, L["Users"]);
             var downloadResult = await BlazorDownloadFileService.DownloadFile($"{L["Users"]}.xlsx", result, "application/octet-stream");
             Snackbar.Add($"{ConstantString.ExportSuccess}", Severity.Info);
@@ -873,9 +846,7 @@
                                                                           { L["User Name"], (row, item) => item.UserName = row[L["User Name"]]?.ToString() },
                                                                           { L["Display Name"], (row, item) => item.DisplayName = row[L["Display Name"]]?.ToString() },
                                                                           { L["Email"], (row, item) => item.Email = row[L["Email"]]?.ToString() },
-                                                                          { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() },
-                                                                          { L["Tenant Name"], (row, item) => item.TenantName = row[L["Tenant Name"]]?.ToString() },
-                                                                          { L["Tenant Id"], (row, item) => item.TenantId = row[L["Tenant Id"]]?.ToString() }
+                                                                          { L["Phone Number"], (row, item) => item.PhoneNumber = row[L["Phone Number"]]?.ToString() }
                                                                       }, L["Users"]);
         if (result.Succeeded)
         {
@@ -883,10 +854,6 @@
             {
                 if (!UserManager.Users.Any(x => x.UserName == user.UserName))
                 {
-                    var tenantId = TenantsService.DataSource.Any(x => x.Name == user.TenantName) ? TenantsService.DataSource.First(x => x.Name == user.TenantName)
-                                                                                                                 .Id : TenantsService.DataSource.First()
-                                                                                                                                     .Id;
-                    user.TenantId = tenantId;
                     var iResult = await UserManager.CreateAsync(user);
                     if (iResult.Succeeded)
                     {

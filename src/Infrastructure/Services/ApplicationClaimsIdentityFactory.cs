@@ -14,22 +14,6 @@ public class ApplicationClaimsIdentityFactory : UserClaimsPrincipalFactory<Appli
     public override async Task<ClaimsPrincipal> CreateAsync(ApplicationUser user)
     {
         ClaimsPrincipal principal = await base.CreateAsync(user);
-        if (!string.IsNullOrEmpty(user.TenantId))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
-                                                            {
-                                                                new Claim(ApplicationClaimTypes.TenantId, user.TenantId)
-                                                            });
-        }
-
-        if (!string.IsNullOrEmpty(user.TenantName))
-        {
-            ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]
-                                                            {
-                                                                new Claim(ApplicationClaimTypes.TenantName, user.TenantName)
-                                                            });
-        }
-
         if (!string.IsNullOrEmpty(user.SuperiorId))
         {
             ((ClaimsIdentity)principal.Identity)?.AddClaims(new[]

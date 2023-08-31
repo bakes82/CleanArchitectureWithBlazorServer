@@ -239,9 +239,7 @@
                        Email = userName.Any(x => x == '@') ? userName : $"{userName}@{provider}.com",
                        Provider = provider,
                        DisplayName = name,
-                       SuperiorId = admin.Id,
-                       TenantId = admin.TenantId,
-                       TenantName = admin.TenantName
+                       SuperiorId = admin.Id
                    };
             var createResult = await UserManager.CreateAsync(user);
             if (createResult.Succeeded)

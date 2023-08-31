@@ -19,8 +19,6 @@ public class UserProfile
                                                       .ToString();
 
     public bool    IsActive   { get; set; }
-    public string? TenantId   { get; set; }
-    public string? TenantName { get; set; }
 }
 
 public class UserProfileEditValidator : AbstractValidator<UserProfile>

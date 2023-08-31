@@ -29,12 +29,9 @@ public class UserProfileState
                           Provider              = dto.Provider,
                           UserName              = dto.UserName,
                           IsActive              = dto.IsActive,
-                          TenantId              = dto.TenantId,
-                          TenantName            = dto.TenantName,
                           SuperiorId            = dto.SuperiorId,
                           SuperiorName          = dto.SuperiorName,
-                          AssignedRoles         = dto.AssignedRoles,
-                          DefaultRole           = dto.DefaultRole
+                          AssignedRoles         = dto.AssignedRoles
                       };
     }
 

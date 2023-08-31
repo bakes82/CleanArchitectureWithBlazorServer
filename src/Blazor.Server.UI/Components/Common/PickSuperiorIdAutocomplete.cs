@@ -6,10 +6,7 @@ namespace Blazor.Server.UI.Components.Common;
 public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
 {
     private List<ApplicationUserDto>? _userList;
-
-    [Parameter]
-    public string? TenantId { get; set; }
-
+    
     [Parameter]
     public string OwnerName { get; set; } = string.Empty;
 
@@ -31,7 +28,7 @@ public class PickSuperiorIdAutocomplete : MudAutocomplete<string>
     private async Task<IEnumerable<string>> SearchKeyValues(string value, CancellationToken cancellation)
     {
         // if text is null or empty, show complete list
-        _userList = await IdentityService.GetUsers(TenantId, cancellation);
+        _userList = await IdentityService.GetUsers(cancellation);
         List<string> result = new List<string>();
         if (string.IsNullOrEmpty(value) && _userList is not null)
         {

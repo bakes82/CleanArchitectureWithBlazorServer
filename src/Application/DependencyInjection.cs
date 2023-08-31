@@ -1,8 +1,6 @@
 using CleanArchitecture.Blazor.Application.Common.Behaviours;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Application.Common.PublishStrategies;
 using CleanArchitecture.Blazor.Application.Common.Security;
-using CleanArchitecture.Blazor.Application.Services.MultiTenant;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CleanArchitecture.Blazor.Application;
@@ -31,13 +29,6 @@ public static class DependencyInjection
                                options.UseReduxDevTools();
                            });
         services.AddLazyCache();
-        services.AddScoped<TenantService>();
-        services.AddScoped<ITenantService>(sp =>
-                                           {
-                                               TenantService service = sp.GetRequiredService<TenantService>();
-                                               service.Initialize();
-                                               return service;
-                                           });
         services.AddScoped<RegisterFormModelFluentValidator>();
         return services;
     }

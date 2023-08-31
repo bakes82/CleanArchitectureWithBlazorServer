@@ -65,9 +65,6 @@
                                     </MudTooltip>
                                 </div>
                             </MudItem>
-                            <MudItem sm="6" xs="12">
-                                <MudTextField For="@(() => Model.TenantName)" @bind-Value="Model.TenantName" Label="@L["Tenant Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
-                            </MudItem>
                             <MudItem xs="12" sm="6">
                                 <MudTextField For="@(() => Model.SuperiorName)" @bind-Value="Model.SuperiorName" Label="@L["Superior Name"]" Variant="Variant.Text" ReadOnly="true"></MudTextField>
                             </MudItem>
@@ -226,7 +223,6 @@
             var orgitem = new OrgItem();
             orgitem.Id = item.Id;
             orgitem.Name = item.DisplayName ?? item.UserName;
-            orgitem.Area = item.TenantName;
             orgitem.ProfileUrl = item.ProfilePictureDataUrl;
             orgitem.ImageUrl = item.ProfilePictureDataUrl;
             if (currerntuserName == item.UserName) orgitem.IsLoggedUser = true;
@@ -266,7 +262,7 @@
         imgstream.Position = 0;
         using (var outStream = new MemoryStream())
         {
-            using (var image = Image.Load(imgstream))
+            using (var image = await Image.LoadAsync(imgstream))
             {
                 image.Mutate(i => i.Resize(new ResizeOptions
                                            {
@@ -277,7 +273,7 @@
                 var filename = e.File.Name;
                 var fi = new FileInfo(filename);
                 var ext = fi.Extension;
-                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, "ProfilePicture", outStream.ToArray()));
                 Model.ProfilePictureDataUrl = result;
                 var user = await UserManager.FindByIdAsync(Model.UserId!);
                 user!.ProfilePictureDataUrl = Model.ProfilePictureDataUrl;

@@ -1,4 +1,3 @@
-@using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant
 @using CleanArchitecture.Blazor.Application.Features.Identity.Dto
 @using ResizeMode = SixLabors.ImageSharp.Processing.ResizeMode
 @using Severity = MudBlazor.Severity
@@ -32,21 +31,6 @@
                     </MudIconButton>
                 </MudTooltip>
             </div>
-        </MudItem>
-        <MudItem sm="6" xs="12">
-            <MudSelect For="@(() => Model.TenantId)"
-                       T="string"
-                       Label="@L["Select Tenant"]"
-                       Text="@Model.TenantName"
-                       Required="true"
-                       RequiredError="@L["Tenant is required."]"
-                       Value="@Model.TenantId"
-                       ValueChanged="TenantSelectChanged">
-                @foreach (var item in TenantsService.DataSource)
-                {
-                    <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
-                }
-            </MudSelect>
         </MudItem>
         <MudItem xs="12" sm="6">
             <MudTextField For="@(() => Model.Provider)" @bind-Value="Model.Provider" Label="@L["Provider"]" Variant="Variant.Text"></MudTextField>
@@ -138,9 +122,6 @@
     private IUploadService UploadService { get; set; } = default!;
 
     [Inject]
-    private ITenantService TenantsService { get; set; } = default!;
-
-    [Inject]
     private RoleManager<ApplicationRole> RoleManager { get; set; } = default!;
 
     ApplicationUserDtoValidator _modelValidator = new ApplicationUserDtoValidator();
@@ -178,14 +159,6 @@
         }
     }
 
-    private Task TenantSelectChanged(string id)
-    {
-        var tenant = TenantsService.DataSource.Find(x => x.Id == id);
-        Model.TenantId = tenant?.Id;
-        Model.TenantName = tenant?.Name;
-        return Task.CompletedTask;
-    }
-
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
         var filestream = e.File.OpenReadStream(GlobalVariable.MaxAllowedSize);
@@ -201,11 +174,11 @@
                                                Mode = ResizeMode.Crop,
                                                Size = new Size(128, 128)
                                            }));
-                image.Save(outStream, PngFormat.Instance);
+                await image.SaveAsync(outStream, PngFormat.Instance);
                 var filename = e.File.Name;
                 var fi = new FileInfo(filename);
                 var ext = fi.Extension;
-                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, UploadType.ProfilePicture, outStream.ToArray()));
+                var result = await UploadService.UploadAsync(new UploadRequest(Guid.NewGuid() + ext, "ProfilePicture", outStream.ToArray()));
                 Model.ProfilePictureDataUrl = result;
     //Do your validations here
                 Snackbar.Add(ConstantString.UploadSuccess, Severity.Info);

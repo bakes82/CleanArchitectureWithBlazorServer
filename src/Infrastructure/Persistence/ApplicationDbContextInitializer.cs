@@ -79,14 +79,6 @@ public class ApplicationDbContextInitializer
 
     private async Task TrySeedAsync()
     {
-        // Default tenants
-        if (!_context.Tenants.Any())
-        {
-            _context.Tenants.Add(new Tenant { Name = "Master", Description = "Master Site" });
-            _context.Tenants.Add(new Tenant { Name = "Slave", Description  = "Slave Site" });
-            await _context.SaveChangesAsync();
-        }
-
         // Default roles
         ApplicationRole     administratorRole = new ApplicationRole(RoleName.Admin) { Description = "Admin Group" };
         ApplicationRole     userRole          = new ApplicationRole(RoleName.Basic) { Description = "Basic Group" };
@@ -120,10 +112,6 @@ public class ApplicationDbContextInitializer
                                             UserName = UserName.Administrator,
                                             Provider = "Local",
                                             IsActive = true,
-                                            TenantId = _context.Tenants.First()
-                                                               .Id,
-                                            TenantName = _context.Tenants.First()
-                                                                 .Name,
                                             DisplayName           = UserName.Administrator,
                                             Email                 = "new163@163.com",
                                             EmailConfirmed        = true,
@@ -134,10 +122,6 @@ public class ApplicationDbContextInitializer
                                    UserName = UserName.Demo,
                                    IsActive = true,
                                    Provider = "Local",
-                                   TenantId = _context.Tenants.First()
-                                                      .Id,
-                                   TenantName = _context.Tenants.First()
-                                                        .Name,
                                    DisplayName           = UserName.Demo,
                                    Email                 = "neozhu@126.com",
                                    EmailConfirmed        = true,

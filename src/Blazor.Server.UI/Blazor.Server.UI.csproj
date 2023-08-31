@@ -30,4 +30,8 @@
         <ProjectReference Include="..\Migrators\Migrators.PostgreSQL\Migrators.PostgreSQL.csproj"/>
         <ProjectReference Include="..\Migrators\Migrators.SqLite\Migrators.SqLite.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Tenants\Tenants.razor" />
+      <_ContentIncludedByDefault Remove="Pages\Tenants\_TenantFormDialog.razor" />
+    </ItemGroup>
 </Project>

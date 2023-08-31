@@ -9,8 +9,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
-
-    public DbSet<Tenant>     Tenants     { get; set; }
+    
     public DbSet<Logger>     Loggers     { get; set; }
     public DbSet<AuditTrail> AuditTrails { get; set; }
 

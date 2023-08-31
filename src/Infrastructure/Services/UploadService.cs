@@ -16,7 +16,7 @@ public class UploadService : IUploadService
         MemoryStream streamData = new MemoryStream(request.Data);
         if (streamData.Length > 0)
         {
-            string folder     = request.UploadType.GetDescription();
+            string folder     = request.UploadType;
             string folderName = Path.Combine("Files", folder);
             string pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
             bool   exists     = Directory.Exists(pathToSave);

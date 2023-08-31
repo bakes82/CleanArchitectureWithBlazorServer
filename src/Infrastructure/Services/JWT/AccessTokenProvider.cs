@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -12,15 +11,13 @@ public class AccessTokenProvider
     private readonly IIdentityService      _identityService;
     private readonly ProtectedLocalStorage _localStorage;
     private readonly NavigationManager     _navigation;
-    private readonly ITenantProvider       _tenantProvider;
     private readonly string                _tokenKey = nameof(_tokenKey);
 
-    public AccessTokenProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService, ITenantProvider tenantProvider, ICurrentUserService currentUser)
+    public AccessTokenProvider(ProtectedLocalStorage localStorage, NavigationManager navigation, IIdentityService identityService, ICurrentUserService currentUser)
     {
         _localStorage    = localStorage;
         _navigation      = navigation;
         _identityService = identityService;
-        _tenantProvider  = tenantProvider;
         _currentUser     = currentUser;
     }
 
@@ -30,12 +27,8 @@ public class AccessTokenProvider
     {
         AccessToken = await _identityService.GenerateJwtAsync(applicationUser);
         await _localStorage.SetAsync(_tokenKey, AccessToken);
-        _tenantProvider.TenantId   = applicationUser.TenantId;
-        _tenantProvider.TenantName = applicationUser.TenantName;
         _currentUser.UserId        = applicationUser.Id;
         _currentUser.UserName      = applicationUser.UserName;
-        _currentUser.TenantId      = applicationUser.TenantId;
-        _currentUser.TenantName    = applicationUser.TenantName;
     }
 
     public async Task<ClaimsPrincipal> GetClaimsPrincipal()
@@ -49,13 +42,8 @@ public class AccessTokenProvider
                 ClaimsPrincipal? principal = await _identityService.GetClaimsPrincipal(token.Value);
                 if (principal?.Identity?.IsAuthenticated ?? false)
                 {
-                    _tenantProvider.TenantId   = principal?.GetTenantId();
-                    _tenantProvider.TenantName = principal?.GetTenantName();
                     _currentUser.UserId        = principal?.GetUserId();
-                    _currentUser.UserName      = principal?.GetUserName();
-                    _currentUser.TenantId      = principal?.GetTenantId();
-                    _currentUser.TenantName    = principal?.GetTenantId();
-                    return principal!;
+                    _currentUser.UserName      = principal?.GetUserName(); return principal!;
                 }
             }
         }

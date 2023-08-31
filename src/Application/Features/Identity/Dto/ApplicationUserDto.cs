@@ -17,12 +17,6 @@ public class ApplicationUserDto
     [Description("Provider")]
     public string? Provider { get; set; } = "Local";
 
-    [Description("Tenant Id")]
-    public string? TenantId { get; set; }
-
-    [Description("Tenant Name")]
-    public string? TenantName { get; set; }
-
     [Description("Profile Photo")]
     public string? ProfilePictureDataUrl { get; set; }
 
@@ -40,9 +34,6 @@ public class ApplicationUserDto
 
     [Description("Assigned Roles")]
     public string[]? AssignedRoles { get; set; }
-
-    [Description("Default Role")]
-    public string? DefaultRole => AssignedRoles?.FirstOrDefault();
 
     [Description("Is Active")]
     public bool IsActive { get; set; }
@@ -70,12 +61,9 @@ public class ApplicationUserDto
                    DisplayName           = DisplayName,
                    Provider              = Provider,
                    UserName              = UserName,
-                   TenantId              = TenantId,
-                   TenantName            = TenantName,
                    SuperiorId            = SuperiorId,
                    SuperiorName          = SuperiorName,
                    AssignedRoles         = AssignedRoles,
-                   DefaultRole           = DefaultRole
                };
     }
 

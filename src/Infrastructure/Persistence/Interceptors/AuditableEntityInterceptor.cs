@@ -1,4 +1,3 @@
-using CleanArchitecture.Blazor.Application.Common.Interfaces.MultiTenant;
 using CleanArchitecture.Blazor.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -10,12 +9,10 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
     private readonly ICurrentUserService _currentUserService;
     private readonly IDateTime           _dateTime;
-    private readonly ITenantProvider     _tenantProvider;
     private          List<AuditTrail>    _temporaryAuditTrailList = new List<AuditTrail>();
 
-    public AuditableEntityInterceptor(ITenantProvider tenantProvider, ICurrentUserService currentUserService, IMediator mediator, IDateTime dateTime)
+    public AuditableEntityInterceptor(ICurrentUserService currentUserService, IMediator mediator, IDateTime dateTime)
     {
-        _tenantProvider     = tenantProvider;
         _currentUserService = currentUserService;
         _dateTime           = dateTime;
     }
@@ -38,7 +35,6 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     private void UpdateEntities(DbContext context)
     {
         string? userId   = _currentUserService.UserId;
-        string? tenantId = _tenantProvider.TenantId;
         foreach (EntityEntry<BaseAuditableEntity>? entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             switch (entry.State)
@@ -46,22 +42,13 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                 case EntityState.Added:
                     entry.Entity.CreatedBy = userId;
                     entry.Entity.Created   = _dateTime.Now;
-                    if (entry.Entity is IMustHaveTenant mustTenant)
-                    {
-                        mustTenant.TenantId = tenantId;
-                    }
-
-                    if (entry.Entity is IMayHaveTenant mayTenant)
-                    {
-                        mayTenant.TenantId = tenantId;
-                    }
-
                     break;
 
                 case EntityState.Modified:
                     entry.Entity.LastModifiedBy = userId;
                     entry.Entity.LastModified   = _dateTime.Now;
                     break;
+                
                 case EntityState.Deleted:
                     if (entry.Entity is ISoftDelete softDelete)
                     {
@@ -69,15 +56,14 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                         softDelete.Deleted   = _dateTime.Now;
                         entry.State          = EntityState.Modified;
                     }
-
                     break;
+                
                 case EntityState.Unchanged:
                     if (entry.HasChangedOwnedEntities())
                     {
                         entry.Entity.LastModifiedBy = userId;
                         entry.Entity.LastModified   = _dateTime.Now;
                     }
-
                     break;
             }
         }
@@ -86,7 +72,6 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
     private List<AuditTrail> TryInsertTemporaryAuditTrail(DbContext context, CancellationToken cancellationToken = default)
     {
         string? userId   = _currentUserService.UserId;
-        string? tenantId = _tenantProvider.TenantId;
         context.ChangeTracker.DetectChanges();
         List<AuditTrail>? temporaryAuditEntries = new List<AuditTrail>();
         foreach (EntityEntry<IAuditTrial>? entry in context.ChangeTracker.Entries<IAuditTrial>())
@@ -180,7 +165,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                 }
             }
 
-            await context.AddRangeAsync(_temporaryAuditTrailList);
+            await context.AddRangeAsync(_temporaryAuditTrailList, cancellationToken);
             await context.SaveChangesAsync(cancellationToken)
                          .ConfigureAwait(false);
             _temporaryAuditTrailList.Clear();
