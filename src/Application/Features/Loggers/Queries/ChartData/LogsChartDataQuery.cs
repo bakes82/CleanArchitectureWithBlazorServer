@@ -37,12 +37,12 @@ public class LogsChartDataQueryHandler : IRequestHandler<LogsTimeLineChartDataQu
         while (start <= end)
         {
             var item = data.FirstOrDefault(x => x.Date == start.Date);
-            result.Add(item != null ? new LogTimeLineDto { Dt = item.Date, Total = item.Total } : new LogTimeLineDto { Dt = start, Total = 0 });
+            result.Add(item != null ? new LogTimeLineDto { DateTimeField = item.Date, Total = item.Total } : new LogTimeLineDto { DateTimeField = start, Total = 0 });
 
             start = start.AddDays(1);
         }
 
-        return result.OrderBy(x => x.Dt)
+        return result.OrderBy(x => x.DateTimeField)
                      .ToList();
     }
 }

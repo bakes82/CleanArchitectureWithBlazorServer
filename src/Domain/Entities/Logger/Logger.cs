@@ -1,6 +1,6 @@
 namespace CleanArchitecture.Blazor.Domain.Entities.Logger;
 
-public class Logger : IEntity<int>
+public class Logger : IEntity<Guid>
 {
     public string? Message         { get; set; }
     public string? MessageTemplate { get; set; }
@@ -13,5 +13,5 @@ public class Logger : IEntity<int>
     public string?  ClientAgent { get; set; }
     public string?  Properties  { get; set; }
     public string?  LogEvent    { get; set; }
-    public int      Id          { get; set; }
+    public Guid      Id          { get; set; }
 }

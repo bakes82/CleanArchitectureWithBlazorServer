@@ -5,7 +5,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Loggers.DTOs;
 public class LogDto
 {
     [Description("Id")]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Description("Message")]
     public string? Message { get; set; }

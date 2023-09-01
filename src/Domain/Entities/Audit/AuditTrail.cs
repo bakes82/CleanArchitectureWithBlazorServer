@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Domain.Entities.Audit;
 
-public class AuditTrail : IEntity<int>
+public class AuditTrail : IEntity<Guid>
 {
     public         string?                      UserId          { get; set; }
     public virtual ApplicationUser?             Owner           { get; set; }
@@ -18,5 +18,5 @@ public class AuditTrail : IEntity<int>
 
     public List<PropertyEntry> TemporaryProperties    { get; } = new List<PropertyEntry>();
     public bool                HasTemporaryProperties => TemporaryProperties.Any();
-    public int                 Id                     { get; set; }
+    public Guid                 Id                     { get; set; }
 }

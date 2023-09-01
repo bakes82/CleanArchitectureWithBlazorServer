@@ -8,13 +8,13 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence.Interceptors;
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly IDateTime           _dateTime;
+    private readonly IDateTimeService    _dateTimeService;
     private          List<AuditTrail>    _temporaryAuditTrailList = new List<AuditTrail>();
 
-    public AuditableEntityInterceptor(ICurrentUserService currentUserService, IMediator mediator, IDateTime dateTime)
+    public AuditableEntityInterceptor(ICurrentUserService currentUserService, IMediator mediator, IDateTimeService dateTimeServiceService)
     {
         _currentUserService = currentUserService;
-        _dateTime           = dateTime;
+        _dateTimeService    = dateTimeServiceService;
     }
 
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
@@ -41,19 +41,19 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
             {
                 case EntityState.Added:
                     entry.Entity.CreatedBy = userId;
-                    entry.Entity.Created   = _dateTime.Now;
+                    entry.Entity.Created   = _dateTimeService.Now;
                     break;
 
                 case EntityState.Modified:
                     entry.Entity.LastModifiedBy = userId;
-                    entry.Entity.LastModified   = _dateTime.Now;
+                    entry.Entity.LastModified   = _dateTimeService.Now;
                     break;
                 
                 case EntityState.Deleted:
                     if (entry.Entity is ISoftDelete softDelete)
                     {
                         softDelete.DeletedBy = userId;
-                        softDelete.Deleted   = _dateTime.Now;
+                        softDelete.Deleted   = _dateTimeService.Now;
                         entry.State          = EntityState.Modified;
                     }
                     break;
@@ -62,7 +62,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                     if (entry.HasChangedOwnedEntities())
                     {
                         entry.Entity.LastModifiedBy = userId;
-                        entry.Entity.LastModified   = _dateTime.Now;
+                        entry.Entity.LastModified   = _dateTimeService.Now;
                     }
                     break;
             }
@@ -76,7 +76,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
         List<AuditTrail>? temporaryAuditEntries = new List<AuditTrail>();
         foreach (EntityEntry<IAuditTrial>? entry in context.ChangeTracker.Entries<IAuditTrial>())
         {
-            if (entry.Entity is AuditTrail || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+            if (entry.Entity is AuditTrail || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged) //ToDo: Is AuditTrail check needed?
             {
                 continue;
             }
@@ -86,7 +86,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                                          TableName = entry.Entity.GetType()
                                                           .Name,
                                          UserId          = userId,
-                                         DateTime        = _dateTime.Now,
+                                         DateTime        = _dateTimeService.Now,
                                          AffectedColumns = new List<string>(),
                                          NewValues       = new Dictionary<string, object?>(),
                                          OldValues       = new Dictionary<string, object?>()

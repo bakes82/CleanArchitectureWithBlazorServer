@@ -64,9 +64,6 @@ public static class SerilogExtensions
             case DbProviderKeys.Npgsql:
                 WriteToNpgsql(serilogConfig, connectionString);
                 break;
-            case DbProviderKeys.SqLite:
-                WriteToSqLite(serilogConfig, connectionString);
-                break;
         }
     }
 
@@ -169,19 +166,6 @@ public static class SerilogExtensions
             useCopy: false
         ));
     }
-
-    private static void WriteToSqLite(LoggerConfiguration serilogConfig, string? connectionString)
-    {
-        if (string.IsNullOrEmpty(connectionString)) return;
-
-        const string tableName = "Loggers";
-        serilogConfig.WriteTo.Async(wt => wt.SQLite(
-            connectionString,
-            tableName,
-            LogEventLevel.Information
-        ));
-    }
-
 
     public static LoggerConfiguration WithUtcTime(this LoggerEnrichmentConfiguration enrichmentConfiguration)
     {

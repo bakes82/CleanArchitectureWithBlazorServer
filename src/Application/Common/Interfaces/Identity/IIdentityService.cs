@@ -5,7 +5,7 @@ using CleanArchitecture.Blazor.Domain.Identity;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-public interface IIdentityService : IService
+public interface IIdentityService
 {
     Task<Result<TokenResponse>> LoginAsync(TokenRequest request, CancellationToken cancellation = default);
     Task<string> GenerateJwtAsync(ApplicationUser user);

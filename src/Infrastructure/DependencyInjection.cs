@@ -31,24 +31,15 @@ public static class DependencyInjection
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-        if (configuration.GetValue<bool>("UseInMemoryDatabase"))
-        {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                                                        {
-                                                            options.UseInMemoryDatabase("BlazorDashboardDb");
-                                                            options.EnableSensitiveDataLogging();
-                                                        });
-        }
-        else
-        {
-            services.AddDbContext<ApplicationDbContext>((p, m) =>
-                                                        {
-                                                            DatabaseSettings databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>()
-                                                                                                 .Value;
-                                                            m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
-                                                            m.UseDatabase(databaseSettings.DbProvider, databaseSettings.ConnectionString);
-                                                        });
-        }
+
+        services.AddDbContext<ApplicationDbContext>((p, m) =>
+                                                    {
+                                                        DatabaseSettings databaseSettings = p.GetRequiredService<IOptions<DatabaseSettings>>()
+                                                                                             .Value;
+                                                        m.AddInterceptors(p.GetServices<ISaveChangesInterceptor>());
+                                                        m.UseDatabase(databaseSettings.DbProvider, databaseSettings.ConnectionString);
+                                                    });
+
 
         services.AddScoped<IDbContextFactory<ApplicationDbContext>, BlazorContextFactory<ApplicationDbContext>>();
         services.AddTransient<IApplicationDbContext>(provider => provider.GetRequiredService<IDbContextFactory<ApplicationDbContext>>()
